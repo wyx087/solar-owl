@@ -21,7 +21,7 @@
 #define HELLO_GROUP "224.192.32.19"
 #define MSGBUFSIZE 2000
 
-main(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   struct sockaddr_in addr;
   int fd, nbytes,addrlen;
@@ -80,15 +80,19 @@ main(int argc, char *argv[])
     puts(msgbuf);
 	
 	
-	ofp = fopen(outputFilename, "w");
-	if (ofp != NULL) {
-		fprintf(ofp, msgbuf);
-		fclose(ofp);
-	} else {
-		fprintf(stderr, "Can't open output file %s!\n",
-		outputFilename);
-		exit(1);
+	if (msgbuf[1] == 's'){  // Solar information only
+		// Write the XML file
+		ofp = fopen(outputFilename, "w");
+		if (ofp != NULL) {
+			fprintf(ofp, msgbuf);
+			fclose(ofp);
+		} else {
+			fprintf(stderr, "Can't open output file %s!\n",
+			outputFilename);
+			exit(1);
+		}
 	}
+
   }
 }
 
