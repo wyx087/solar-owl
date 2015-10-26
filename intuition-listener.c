@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
   struct ip_mreq mreq;
   char msgbuf[MSGBUFSIZE];
   
-  FILE *ofp;
-  char outputFilename[] = "h:/out.xml";
+    char *msg1, *msg2, *msg3;
+    unsigned long val;
 
   u_int yes=1;            /*** MODIFICATION TO ORIGINAL */
 
@@ -72,26 +72,29 @@ int main(int argc, char *argv[])
   while (1) {
     addrlen=sizeof(addr);
     if ((nbytes=recvfrom(fd,msgbuf,MSGBUFSIZE,0,
-			 (struct sockaddr *) &addr,&addrlen)) < 0) {
+             (struct sockaddr *) &addr,&addrlen)) < 0) {
       perror("recvfrom");
       exit(1);
     }
     msgbuf[nbytes] = 0x00; // null terminate before printing
     puts(msgbuf);
-	
-	
-	if (msgbuf[1] == 's'){  // Solar information only
-		// Write the XML file
-		ofp = fopen(outputFilename, "w");
-		if (ofp != NULL) {
-			fprintf(ofp, msgbuf);
-			fclose(ofp);
-		} else {
-			fprintf(stderr, "Can't open output file %s!\n",
-			outputFilename);
-			exit(1);
-		}
-	}
+    
+    
+    if (msgbuf[1] == 's'){  // Solar information only
+
+        msg1 = strstr(msgbuf, "exporting"); // Find exporting section of XML 
+        if (msg1){  // Only proceed if found the string 
+            msg1 = strstr(msg1, ">"); // Find the start of number 
+            msg2 = strstr(msg1, "</"); // Find the end of number 
+            strncpy(msg3, msg1+1, msg2-msg1-1); // Extract the number out to a string 
+            printf("String found: %s\n", msg3);
+            val = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
+            printf("Integer value is %d, +10 is equal to %lu \n", val, val+10);   
+        }
+        else perror("---ERROR--------string changed--------ERROR---");
+        
+        fflush(stdout); // print everything in the stdout buffer
+    }
 
   }
 }
