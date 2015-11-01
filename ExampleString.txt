@@ -1,0 +1,1 @@
+<solar id='44371910087A'><timestamp>1446412377</timestamp><current><generating units='w'>0.00</generating><exporting units='w'>0.00</exporting></current><day><generated units='wh'>3570.55</generated><exported units='wh'>679.94</exported></day></solar>
