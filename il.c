@@ -28,8 +28,13 @@ int main(int argc, char *argv[])
   struct ip_mreq mreq;
   char msgbuf[MSGBUFSIZE];
   
-    char *msg1, *msg2, *msg3;
-    unsigned long val;
+    char *msg1, *msg2;
+    char msg3[9];
+    unsigned long valExporting;
+    
+    FILE * pFile = NULL;
+    time_t rawtime;
+    char timestr[30];
 
   u_int yes=1;            /*** MODIFICATION TO ORIGINAL */
 
@@ -67,6 +72,8 @@ int main(int argc, char *argv[])
     perror("setsockopt");
     exit(1);
   }
+  
+  
 
   /* now just enter a read-print loop */
   while (1) {
@@ -85,14 +92,27 @@ int main(int argc, char *argv[])
         msg1 = strstr(msgbuf, "exporting"); // Find exporting section of XML 
         if (msg1){  // Only proceed if found the string 
             msg1 = strstr(msg1, ">"); // Find the start of number 
-            msg2 = strstr(msg1, "</"); // Find the end of number 
-            strncpy(msg3, msg1+1, msg2-msg1-1); // Extract the number out to a string 
-            printf("String found: %s\n", msg3);
-            val = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
-            printf("Integer value is %d, +10 is equal to %lu \n", val, val+10);   
+            msg2 = strstr(msg1, "."); // Find the end of number 
+            strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
+            printf("String found:- %s\n", msg3);
+            valExporting = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
+            // printf("Integer valExporting is %d  \n\n", valExporting); 
+            
+            pFile = fopen("exporting.txt", "a"); // append the information into a file 
+            if (pFile == NULL){
+                printf("---ERROR--------file open failed--------ERROR---");
+            } else {
+                time (&rawtime);
+                strftime(timestr, 30, "%H:%M:%S", localtime(&rawtime)); // generate desired time format 
+                fprintf(pFile, "%s-%d\n", timestr, valExporting);
+                printf("Writen to file:- %s-%d\n", timestr, valExporting);
+                fclose(pFile);
+            }
+            
         }
         else perror("---ERROR--------string changed--------ERROR---");
         
+        printf ("\n");
         fflush(stdout); // print everything in the stdout buffer
     }
 
