@@ -30,11 +30,22 @@ int main(int argc, char *argv[])
   
     char *msg1, *msg2;
     char msg3[9];
-    unsigned long valExporting;
+    unsigned long valGenerating, valExporting;
     
     FILE * pFile = NULL;
+    const char defaultlogfilename[] = "solargen.log";
+    char logfilename[100];
     time_t rawtime;
     char timestr[30];
+    
+    if (argc >= 2) {  // Determine if we use command parameter or default 
+      strncpy(logfilename, argv[1], 99);
+      logfilename[99] = '\0';
+    } else {
+      strncpy(logfilename, defaultlogfilename, sizeof(defaultlogfilename));
+    }
+    printf("Writing to log file:- %s\n\n", logfilename);
+    
 
   u_int yes=1;            /*** MODIFICATION TO ORIGINAL */
 
@@ -89,28 +100,34 @@ int main(int argc, char *argv[])
     
     if (msgbuf[1] == 's'){  // Solar information only
 
+        msg1 = strstr(msgbuf, "generating"); // Find generating section of XML 
+        msg1 = strstr(msg1, ">"); // Find the start of number 
+        msg2 = strstr(msg1, "."); // Find the end of number 
+        strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
+        printf("Generating String found:- %s\n", msg3);
+        valGenerating = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
+        // printf("Integer valGenerating is %d  \n", valGenerating); 
+        
         msg1 = strstr(msgbuf, "exporting"); // Find exporting section of XML 
-        if (msg1){  // Only proceed if found the string 
-            msg1 = strstr(msg1, ">"); // Find the start of number 
-            msg2 = strstr(msg1, "."); // Find the end of number 
-            strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
-            printf("String found:- %s\n", msg3);
-            valExporting = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
-            // printf("Integer valExporting is %d  \n\n", valExporting); 
-            
-            pFile = fopen("exporting.txt", "a"); // append the information into a file 
-            if (pFile == NULL){
-                printf("---ERROR--------file open failed--------ERROR---");
-            } else {
-                time (&rawtime);
-                strftime(timestr, 30, "%H:%M:%S", localtime(&rawtime)); // generate desired time format 
-                fprintf(pFile, "%s-%d\n", timestr, valExporting);
-                printf("Writen to file:- %s-%d\n", timestr, valExporting);
-                fclose(pFile);
-            }
-            
+        msg1 = strstr(msg1, ">"); // Find the start of number 
+        msg2 = strstr(msg1, "."); // Find the end of number 
+        strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
+        printf("Exporting String found:- %s\n", msg3);
+        valExporting = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
+        // printf("Integer valExporting is %d  \n", valExporting); 
+
+        
+        pFile = fopen(logfilename, "a"); // append the information into a file 
+        if (pFile == NULL){
+            printf("---ERROR--------file open failed--------ERROR---");
+            exit(1);
+        } else {
+            time (&rawtime);
+            strftime(timestr, 30, "%H:%M:%S", localtime(&rawtime)); // generate desired time format 
+            fprintf(pFile, "%s|%lu|%lu\n", timestr, valGenerating, valExporting);
+            printf("Writen to file:- %s|%lu|%lu\n", timestr, valGenerating, valExporting);
+            fclose(pFile);
         }
-        else perror("---ERROR--------string changed--------ERROR---");
         
         printf ("\n");
         fflush(stdout); // print everything in the stdout buffer
