@@ -29,21 +29,21 @@
 // vvvvvv -- Pimote control code -- vvvvvv 
 //    Insert at the top of the code 
 #include <wiringPi.h>
-  #define	D0	0
-  #define	D1	3
-  #define	D2	4
-  #define	D3	2
-  #define	ModSel 5
-  #define	CE  6 
+  #define	D0	    0
+  #define	D1	    3
+  #define	D2	    4
+  #define	D3	    2
+  #define	ModSel  5
+  #define	CE      6 
 int pimote_setup (void) {
   wiringPiSetup () ;
   // Set GPIO modes 
-  pinMode (D0, OUTPUT) ;
-  pinMode (D1, OUTPUT) ;
-  pinMode (D2, OUTPUT) ;
-  pinMode (D3, OUTPUT) ;
-  pinMode (ModSel, OUTPUT) ;
-  pinMode (CE, OUTPUT) ;
+  pinMode (D0, OUTPUT);
+  pinMode (D1, OUTPUT);
+  pinMode (D2, OUTPUT);
+  pinMode (D3, OUTPUT);
+  pinMode (ModSel, OUTPUT);
+  pinMode (CE, OUTPUT);
   delay (100);    // in ms 
   // Set initial values 
   digitalWrite (D0, LOW);
@@ -54,53 +54,44 @@ int pimote_setup (void) {
   digitalWrite (CE, LOW);
   delay (100);    // in ms  
 }
-int pimote_1on (void) {
-  printf ("Pimote turning ON socket 1 \n") ;
-  digitalWrite (D0, HIGH) ;	
-  digitalWrite (D1, HIGH) ;	
-  digitalWrite (D2, HIGH) ;	
-  digitalWrite (D3, HIGH) ;	
+int pimote_onoff (int socket, int on1off) {
+  int r = 0;
+  if (on1off == 1) {
+    printf ("Pimote turning ON ");
+    digitalWrite (D3, HIGH);  // Turn on 
+  } else {
+    printf ("Pimote turning OFF ");
+    digitalWrite (D3, LOW);  // Turn off 
+  } 
+  switch (socket) {
+    case 1:
+      printf ("socket 1.\n");
+      digitalWrite (D2, HIGH);
+      digitalWrite (D1, HIGH);
+      digitalWrite (D0, HIGH);
+      r = 1;
+      break;
+    case 2:
+      printf ("socket 2.\n");
+      digitalWrite (D2, HIGH);
+      digitalWrite (D1, HIGH);
+      digitalWrite (D0, LOW);
+      r = 2;
+      break;
+    default:
+      printf ("ALL sockets.\n");
+      digitalWrite (D2, LOW);
+      digitalWrite (D1, HIGH);
+      digitalWrite (D0, HIGH);
+      r = 0;
+  }
+  // Execute by toggling Chip Enable 
   delay (100) ;
   digitalWrite (CE, HIGH);
   delay (250) ; 
   digitalWrite (CE, LOW);
-  delay (150) ;
-}
-int pimote_1off (void) {
-  printf ("Pimote turning OFF socket 1 \n") ;
-  digitalWrite (D0, HIGH) ;	
-  digitalWrite (D1, HIGH) ;	
-  digitalWrite (D2, HIGH) ;	
-  digitalWrite (D3, LOW) ;	
-  delay (100) ;
-  digitalWrite (CE, HIGH);
-  delay (250) ; 
-  digitalWrite (CE, LOW);
-  delay (150) ;
-}
-int pimote_2on (void) {
-  printf ("Pimote turning ON socket 2 \n") ;
-  digitalWrite (D0, LOW) ;	
-  digitalWrite (D1, HIGH) ;	
-  digitalWrite (D2, HIGH) ;	
-  digitalWrite (D3, HIGH) ;	
-  delay (100) ;
-  digitalWrite (CE, HIGH);
-  delay (250) ; 
-  digitalWrite (CE, LOW);
-  delay (150) ;
-}
-int pimote_2off (void) {
-  printf ("Pimote turning OFF socket 2 \n") ;
-  digitalWrite (D0, LOW) ;	
-  digitalWrite (D1, HIGH) ;	
-  digitalWrite (D2, HIGH) ;	
-  digitalWrite (D3, LOW) ;	
-  delay (100) ;
-  digitalWrite (CE, HIGH);
-  delay (250) ; 
-  digitalWrite (CE, LOW);
-  delay (150) ;
+  delay (150) ;  
+  return r;
 }
 // ^^^^^^ -- Pimote control code -- ^^^^^^  
 
@@ -108,14 +99,13 @@ int pimote_2off (void) {
 
 int main (void)
 {
+  int n, on1off;
   pimote_setup();
   
-  for (;;) {
-    pimote_1on();
-    delay (5000) ;
-    
-    pimote_1off();
-    delay (10000) ;
+  for ( ; ; ) {
+    printf ("Input <socket ID> space <on=1, off=0> :> ");
+    scanf ("%d %d", &n, &on1off);
+    printf ("%d \n", pimote_onoff (n, on1off));
   }
   return 0 ;
 }
