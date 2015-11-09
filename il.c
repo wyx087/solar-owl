@@ -181,15 +181,18 @@ int main(int argc, char *argv[])
         valExporting = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
         // printf("Integer valExporting is %d  \n", valExporting); 
 
-        if (valExporting >= 200) {
-            pimote_onoff (2,1);
-            statusSocket[2] = 1;
-        } else if (valExporting >= 100) {
-            pimote_onoff (1,1);
-            statusSocket[1] = 1;
-        } else if (valExporting <= 20) {
+        if (valExporting >= 900) { // Turn everything on! 
+            pimote_onoff (0,1);
+            for (i = 0; i < TOTALSOCKET; ++i) statusSocket[i] = 1;
+        } else if (valExporting >= 800) {  // 750w radiator 
+            pimote_onoff (2,1);     statusSocket[1] = 1; 
+            pimote_onoff (1,0);     statusSocket[0] = 0;
+        } else if (valExporting >= 160) {  // 120w feet warmer 
+            pimote_onoff (2,0);     statusSocket[1] = 0; 
+            pimote_onoff (1,1);     statusSocket[0] = 1;
+        } else if (valExporting <= 10) { // Everything off! 
             pimote_onoff (0,0);
-            for (i = 1; i <= TOTALSOCKET; ++i) statusSocket[i] = 0;
+            for (i = 0; i < TOTALSOCKET; ++i) statusSocket[i] = 0;
         }
         
         pFile = fopen(logfilename, "a"); // append the information into a file 
@@ -199,7 +202,7 @@ int main(int argc, char *argv[])
         } else {
             time (&rawtime);
             strftime(timestr, 30, "%H:%M:%S", localtime(&rawtime)); // generate desired time format 
-            sprintf(msgbuf, "%s  |%d|%d|%4lu |%4lu \n", timestr, statusSocket[1], statusSocket[2], valGenerating, valExporting);
+            sprintf(msgbuf, "%s  |%d|%d|%4lu |%4lu \n", timestr, statusSocket[0], statusSocket[1], valGenerating, valExporting);
             fprintf(pFile, "%s", msgbuf);
             printf("Writen to file:- %s", msgbuf);
             fclose(pFile);
