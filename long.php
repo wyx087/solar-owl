@@ -5,7 +5,7 @@
 <body>
 <meta name="viewport" content="width=500, initial-scale=1">
 
-<a href="long.php">Longer version</a>
+<a href="index.php">Back</a>
 
 <?php
 function read_last_lines($fp, $num){
@@ -24,7 +24,7 @@ function read_last_lines($fp, $num){
 
 $file = "/var/tmp/solar.log";
 $f = fopen($file, "r");
-$lines = read_last_lines($f, 300);
+$lines = read_last_lines($f, 20000);
 fclose($f);
 
 $lines = array_reverse($lines);
