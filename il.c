@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     int i;
     char *msg1, *msg2;
     char msg3[9];
-    unsigned long valGenerating, valExporting;
+    unsigned long valUsage, valGenerating, valExporting;
     int statusSocket [TOTALSOCKET];
     
     FILE * pFile = NULL;
@@ -163,6 +163,15 @@ int main(int argc, char *argv[])
     puts(msgbuf);
     
     // MY own addition: 
+    if (msgbuf[1] == 'e'){  // Electricity usage only 
+        msg1 = strstr(msgbuf, "<curr"); // Find generating section of XML 
+        msg1 = strstr(msg1, ">"); // Find the start of number 
+        msg2 = strstr(msg1, "."); // Find the end of number 
+        strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
+        printf("Current Usage String found:- %s\n", msg3);
+        valUsage = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
+    }
+    
     if (msgbuf[1] == 's'){  // Solar information only
 
         msg1 = strstr(msgbuf, "generating"); // Find generating section of XML 
@@ -191,7 +200,7 @@ int main(int argc, char *argv[])
             pimote_onoff (2,0);     statusSocket[1] = 0; 
             pimote_onoff (1,1);     statusSocket[0] = 1;
         } else if (valExporting <= 10) { // Everything off! 
-            pimote_onoff (0,0);
+            pimote_onoff (1,0);     pimote_onoff (2,0);
             for (i = 0; i < TOTALSOCKET; ++i) statusSocket[i] = 0;
         }
         
@@ -201,8 +210,8 @@ int main(int argc, char *argv[])
             exit(1);
         } else {
             time (&rawtime);
-            strftime(timestr, 30, "%H:%M:%S", localtime(&rawtime)); // generate desired time format 
-            sprintf(msgbuf, "%s  |%d|%d|%4lu |%4lu \n", timestr, statusSocket[0], statusSocket[1], valGenerating, valExporting);
+            strftime(timestr, 30, "%d/%m/%y %H:%M:%S", localtime(&rawtime)); // generate desired time format 
+            sprintf(msgbuf, "%s  |%d|%d| %4lu | %4lu |%4lu \n", timestr, statusSocket[0], statusSocket[1], valUsage, valGenerating, valExporting);
             fprintf(pFile, "%s", msgbuf);
             printf("Writen to file:- %s", msgbuf);
             fclose(pFile);
