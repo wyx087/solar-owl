@@ -193,14 +193,14 @@ int main(int argc, char *argv[])
         if (valExporting >= 900) { // Turn everything on! 
             pimote_onoff (0,1);
             for (i = 0; i < TOTALSOCKET; ++i) statusSocket[i] = 1;
-        } else if (valExporting >= 800) {  // 750w radiator 
+        } else if (valExporting >= 600) {  // 750w radiator 
             pimote_onoff (2,1);     statusSocket[1] = 1; 
             pimote_onoff (1,0);     statusSocket[0] = 0;
-        } else if (valExporting >= 160) {  // 120w feet warmer 
-            pimote_onoff (2,0);     statusSocket[1] = 0; 
-            pimote_onoff (1,1);     statusSocket[0] = 1;
+        // } else if (valExporting >= 160) {  // 120w feet warmer 
+            // pimote_onoff (2,0);     statusSocket[1] = 0; 
+            // pimote_onoff (1,1);     statusSocket[0] = 1;
         } else if (valExporting <= 10) { // Everything off! 
-            pimote_onoff (1,0);     pimote_onoff (2,0);
+            pimote_onoff (0,0);
             for (i = 0; i < TOTALSOCKET; ++i) statusSocket[i] = 0;
         }
         
