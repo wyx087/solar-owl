@@ -21,7 +21,7 @@
 #define HELLO_GROUP "224.192.32.19"
 #define MSGBUFSIZE 2000
 
-#define TOTALSOCKET 2
+#define ONTIMEOUT 50 // After how long turn off everything to redetermine state 
 #define PLUG1ON 150  // 100w feet warmer 
 #define PLUG2ON 600  // 600w radiator 
 #define PLUGSON 900
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
     char *msg1, *msg2;
     char msg3[9];
     unsigned long valUsage, valGenerating, valExporting;
-    int statusSocket;
+    int statusSocket, countON;
     
     FILE * pFile = NULL;
     const char defaultlogfilename[] = "solargen.log";
@@ -193,24 +193,38 @@ int main(int argc, char *argv[])
         valExporting = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
         // printf("Integer valExporting is %d  \n", valExporting); 
 
+        countON++;  // Keep a count of how long something has been turned on. 
         switch(statusSocket) {
+        case 9 :
+            if (countON >= ONTIMEOUT) {// Everything off! 
+                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+                break;
+            }
+            if (valExporting >= PLUGSON) { // Turn everything on! 
+                pimote_onoff (0,1);     statusSocket = 9;
+            } else if (valExporting <= 10) { // Everything off! 
+                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+            }
+            break;
         case 2 :
+            if (countON >= ONTIMEOUT) {// Everything off! 
+                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+                break;
+            }
             if (valExporting >= PLUGSON) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;
             } else if (valExporting >= PLUG2ON) {
                 pimote_onoff (2,1);     statusSocket = 2; 
                 pimote_onoff (1,0);
             } else if (valExporting <= 10) { // Everything off! 
-                pimote_onoff (0,0);     statusSocket = 0;
+                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
             }
             break;
-        case 9 :
-            if (valExporting >= PLUGSON) { // Turn everything on! 
-                pimote_onoff (0,1);     statusSocket = 9;
-            } else if (valExporting <= 10) { // Everything off! 
-                pimote_onoff (0,0);     statusSocket = 0;
+        case 1 :
+            if (countON >= ONTIMEOUT) {// Everything off! 
+                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+                break;
             }
-            break;
         default : 
             if (valExporting >= PLUGSON) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;
@@ -221,7 +235,7 @@ int main(int argc, char *argv[])
                 pimote_onoff (2,0);
                 pimote_onoff (1,1);     statusSocket = 1;
             } else if (valExporting <= 10) { // Everything off! 
-                pimote_onoff (0,0);     statusSocket = 0;
+                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
             }
         }
         
@@ -233,7 +247,7 @@ int main(int argc, char *argv[])
         } else {
             time (&rawtime);
             strftime(timestr, 30, "%d/%m/%y %H:%M:%S", localtime(&rawtime)); // generate desired time format 
-            sprintf(msgbuf, "%s  | %d | %4lu | %4lu | %4lu \n", timestr, statusSocket, valUsage, valGenerating, valExporting);
+            sprintf(msgbuf, "%s | %d|%2d | %4lu | %4lu | %4lu \n", timestr, statusSocket, countON, valUsage, valGenerating, valExporting);
             fprintf(pFile, "%s", msgbuf);
             printf("Writen to file:- %s", msgbuf);
             fclose(pFile);
