@@ -233,7 +233,7 @@ int main(int argc, char *argv[])
         } else {
             time (&rawtime);
             strftime(timestr, 30, "%d/%m/%y %H:%M:%S", localtime(&rawtime)); // generate desired time format 
-            sprintf(msgbuf, "%s  |%d | %4lu | %4lu | %4lu \n", timestr, statusSocket, valUsage, valGenerating, valExporting);
+            sprintf(msgbuf, "%s  | %d | %4lu | %4lu | %4lu \n", timestr, statusSocket, valUsage, valGenerating, valExporting);
             fprintf(pFile, "%s", msgbuf);
             printf("Writen to file:- %s", msgbuf);
             fclose(pFile);
