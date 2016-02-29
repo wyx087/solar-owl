@@ -196,10 +196,6 @@ int main(int argc, char *argv[])
         countON++;  // Keep a count of how long something has been turned on. 
         switch(statusSocket) {
         case 9 :
-            if (countON >= ONTIMEOUT) {// Everything off! 
-                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
-                break;
-            }
             if (valExporting >= PLUGSON) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;
             } else if (valExporting <= 10) { // Everything off! 
@@ -207,10 +203,6 @@ int main(int argc, char *argv[])
             }
             break;
         case 2 :
-            if (countON >= ONTIMEOUT) {// Everything off! 
-                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
-                break;
-            }
             if (valExporting >= PLUGSON) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;
             } else if (valExporting >= PLUG2ON) {
@@ -221,9 +213,16 @@ int main(int argc, char *argv[])
             }
             break;
         case 1 :
-            if (countON >= ONTIMEOUT) {// Everything off! 
+            if (valExporting >= PLUGSON) { // Turn everything on! 
+                pimote_onoff (0,1);     statusSocket = 9;
+            } else if (valExporting >= PLUG2ON) {
+                pimote_onoff (2,1);     statusSocket = 2;
+                pimote_onoff (1,0);
+            } else if (valExporting >= PLUG1ON) {
+                pimote_onoff (2,0);
+                pimote_onoff (1,1);     statusSocket = 1;
+            } else if (valExporting <= 10) { // Everything off! 
                 pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
-                break;
             }
         default : 
             if (valExporting >= PLUGSON) { // Turn everything on! 
@@ -236,13 +235,21 @@ int main(int argc, char *argv[])
                 pimote_onoff (1,1);     statusSocket = 1;
             } else if (valExporting <= 10) { // Everything off! 
                 pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+            } else {
+                countON = 0;
             }
+        }
+        if (countON == ONTIMEOUT) {// Everything off for 2 cycles to reassess power usage 
+            pimote_onoff (0,0);     statusSocket = 0;
+        } else if (countON > ONTIMEOUT) {
+            pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
         }
         
         
         pFile = fopen(logfilename, "a"); // append the information into a file 
         if (pFile == NULL){
             printf("---ERROR--------file open failed--------ERROR---");
+            fflush(stdout); // print everything in the stdout buffer
             exit(1);
         } else {
             time (&rawtime);
