@@ -23,7 +23,7 @@
 
 #define ONTIMEOUT 50 // After how long turn off everything to redetermine state 
 #define PLUG1ON 150  // 100w feet warmer 
-#define PLUG2ON 600  // 600w radiator 
+#define PLUG2ON 550  // 600w radiator 
 #define PLUGSON 900
 
 // vvvvvv -- Pimote control code -- vvvvvv 
@@ -198,42 +198,42 @@ int main(int argc, char *argv[])
         case 9 :
             if (valExporting >= PLUGSON) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;
-            } else if (valExporting <= 10) { // Everything off! 
+            } else if (valExporting <= 5) { // Everything off! 
                 pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
             }
             break;
         case 2 :
             if (valExporting >= PLUGSON) { // Turn everything on! 
-                pimote_onoff (0,1);     statusSocket = 9;
+                pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
             } else if (valExporting >= PLUG2ON) {
                 pimote_onoff (2,1);     statusSocket = 2; 
                 pimote_onoff (1,0);
-            } else if (valExporting <= 10) { // Everything off! 
+            } else if (valExporting <= 5) { // Everything off! 
                 pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
             }
             break;
         case 1 :
             if (valExporting >= PLUGSON) { // Turn everything on! 
-                pimote_onoff (0,1);     statusSocket = 9;
+                pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
             } else if (valExporting >= PLUG2ON) {
-                pimote_onoff (2,1);     statusSocket = 2;
+                pimote_onoff (2,1);     statusSocket = 2;   countON = 0; 
                 pimote_onoff (1,0);
             } else if (valExporting >= PLUG1ON) {
                 pimote_onoff (2,0);
                 pimote_onoff (1,1);     statusSocket = 1;
-            } else if (valExporting <= 10) { // Everything off! 
+            } else if (valExporting <= 5) { // Everything off! 
                 pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
             }
         default : 
             if (valExporting >= PLUGSON) { // Turn everything on! 
-                pimote_onoff (0,1);     statusSocket = 9;
+                pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
             } else if (valExporting >= PLUG2ON) {
-                pimote_onoff (2,1);     statusSocket = 2; 
+                pimote_onoff (2,1);     statusSocket = 2;   countON = 0;
                 pimote_onoff (1,0);
             } else if (valExporting >= PLUG1ON) {
                 pimote_onoff (2,0);
-                pimote_onoff (1,1);     statusSocket = 1;
-            } else if (valExporting <= 10) { // Everything off! 
+                pimote_onoff (1,1);     statusSocket = 1;   countON = 0;
+            } else if (valExporting <= 5) { // Everything off! 
                 pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
             } else {
                 countON = 0;
