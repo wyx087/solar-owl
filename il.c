@@ -224,6 +224,7 @@ int main(int argc, char *argv[])
             } else if (valExporting <= 5) { // Everything off! 
                 pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
             }
+            break;
         default : 
             if (valExporting >= PLUGSON) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
