@@ -22,9 +22,9 @@
 #define MSGBUFSIZE 2000
 
 #define ONTIMEOUT 50 // After how long turn off everything to redetermine state 
-#define PLUG1ON 150  // 100w feet warmer 
-#define PLUG2ON 550  // 600w radiator 
-#define PLUGSON 900
+#define PLUG1ON 120  // 100w feet warmer 
+#define PLUG2ON 500  // 500w radiator 
+#define PLUGSON 750
 
 // vvvvvv -- Pimote control code -- vvvvvv 
 //    Insert at the top of the code 
