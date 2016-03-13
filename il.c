@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
+#define AVGOVER 20
 #define ONTIMEOUT 50 // After how long turn off everything to redetermine state 
 #define PLUG1ON 120  // 100w feet warmer 
 #define PLUG2ON 500  // 500w radiator 
@@ -236,10 +236,8 @@ int main(int argc, char *argv[])
             } else if (valExporting >= PLUG1ON) {
                 pimote_onoff (2,0);
                 pimote_onoff (1,1);     statusSocket = 1;   countON = 0;
-            } else if (valExporting <= 5) { // Everything off! 
-                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
             } else {
-                countON = 0;
+                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
             }
         }
         if (countON == ONTIMEOUT) {// Everything off for 2 cycles to reassess power usage 
