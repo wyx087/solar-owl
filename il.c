@@ -17,14 +17,16 @@
 #include <stdlib.h>
 
 
-#define HELLO_PORT 22600
-#define HELLO_GROUP "224.192.32.19"
-#define MSGBUFSIZE 2000
-
 #define ONTIMEOUT 50 // After how long turn off everything to redetermine state 
 #define PLUG1ON 120  // 100w feet warmer 
 #define PLUG2ON 500  // 500w radiator 
 #define PLUGSON 750
+
+
+
+#define HELLO_PORT 22600
+#define HELLO_GROUP "224.192.32.19"
+#define MSGBUFSIZE 2000
 
 // vvvvvv -- Pimote control code -- vvvvvv 
 //    Insert at the top of the code 
@@ -203,7 +205,7 @@ int main(int argc, char *argv[])
             }
             break;
         case 2 :
-            if (valExporting >= PLUGSON) { // Turn everything on! 
+            if (valExporting >= (PLUGSON - PLUG2ON + 80)) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
             } else if (valExporting >= PLUG2ON) {
                 pimote_onoff (2,1);     statusSocket = 2; 
@@ -213,9 +215,9 @@ int main(int argc, char *argv[])
             }
             break;
         case 1 :
-            if (valExporting >= PLUGSON) { // Turn everything on! 
+            if (valExporting >= (PLUGSON - PLUG1ON + 50)) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
-            } else if (valExporting >= PLUG2ON) {
+            } else if (valExporting >= (PLUG2ON - PLUG1ON + 50)) {
                 pimote_onoff (2,1);     statusSocket = 2;   countON = 0; 
                 pimote_onoff (1,0);
             } else if (valExporting >= PLUG1ON) {
@@ -241,7 +243,7 @@ int main(int argc, char *argv[])
             }
         }
         if (countON == ONTIMEOUT) {// Everything off for 2 cycles to reassess power usage 
-            pimote_onoff (0,0);     statusSocket = 0;
+            pimote_onoff (0,0);
         } else if (countON > ONTIMEOUT) {
             pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
         }
