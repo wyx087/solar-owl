@@ -20,7 +20,7 @@
 #define ONTIMEOUT 50 // After how long turn off everything to redetermine state 
 #define PLUG1ON 120  // 100w feet warmer 
 #define PLUG2ON 500  // 500w radiator 
-#define PLUGSON 750
+#define PLUGSON 650
 
 
 
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
             }
             break;
         case 2 :
-            if (valExporting >= (PLUGSON - PLUG2ON + 80)) { // Turn everything on! 
+            if (valExporting >= (PLUGSON - PLUG2ON + 20)) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
             } else if (valExporting >= PLUG2ON) {
                 pimote_onoff (2,1);     statusSocket = 2; 
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
         case 1 :
             if (valExporting >= (PLUGSON - PLUG1ON + 50)) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
-            } else if (valExporting >= (PLUG2ON - PLUG1ON + 50)) {
+            } else if (valExporting >= (PLUG2ON - 20)) {
                 pimote_onoff (2,1);     statusSocket = 2;   countON = 0; 
                 pimote_onoff (1,0);
             } else if (valExporting >= PLUG1ON) {
