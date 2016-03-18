@@ -19,7 +19,7 @@
 #define AVGOVER 20
 #define ONTIMEOUT 50 // After how long turn off everything to redetermine state 
 #define PLUG1ON 120  // 100w feet warmer 
-#define PLUG2ON 500  // 500w radiator 
+#define PLUG2ON 520  // 500w radiator 
 #define PLUGSON 650
 
 
