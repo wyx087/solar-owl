@@ -116,7 +116,9 @@ int main(int argc, char *argv[])
     int statusSocket, countON;
     
     FILE * pFile = NULL;
+    FILE * psmoothFile = NULL;
     const char defaultlogfilename[] = "solargen.log";
+    const char logsmoothname[] = "/var/tmp/solar_smooth.log";
     char logfilename[100];
     time_t rawtime;
     char timestr[30];
@@ -265,7 +267,11 @@ int main(int argc, char *argv[])
         }
         
         
-        // Averaging function: 
+        // Get time for later log files         
+        time (&rawtime);
+        strftime(timestr, 30, "%d/%m/%y %H:%M:%S", localtime(&rawtime)); // generate desired time format 
+        
+        // Averaging and smooth log output: 
         sumExporting = sumExporting + valExporting - aryExporting[countExporting]; 
         aryExporting[countExporting] = valExporting; 
         if (countExporting < AVGOVER -1) countExporting++; else countExporting = 0;
@@ -274,19 +280,29 @@ int main(int argc, char *argv[])
         aryGenerating[countGenerating] = valGenerating; 
         if (countGenerating < AVGOVER -1) countGenerating++; else countGenerating = 0;
         avgGenerating = sumGenerating / AVGOVER;
+        if (countExporting = 0) {
+            psmoothFile == fopen(logsmoothname, "a"); // append to the end of the file 
+            if (psmoothFile == NULL){
+                printf("---ERROR--------file open failed--------ERROR---");
+                fflush(stdout); // print everything in the stdout buffer
+            } else {
+                sprintf(msgbuf, "%s , %4lu, %4lu, %4lu \n", timestr, avgUsage, avgGenerating, avgExporting);
+                fprintf(psmoothFile, "%s", msgbuf);
+                printf("Writen to smooth log file:- %s", msgbuf);
+                fclose(psmoothFile);
+            }
+        }
         
-        
+        // Log current status 
         pFile = fopen(logfilename, "a"); // append the information into a file 
         if (pFile == NULL){
             printf("---ERROR--------file open failed--------ERROR---");
             fflush(stdout); // print everything in the stdout buffer
             exit(1);
         } else {
-            time (&rawtime);
-            strftime(timestr, 30, "%d/%m/%y %H:%M:%S", localtime(&rawtime)); // generate desired time format 
             sprintf(msgbuf, "%s | %d|%2d | %4lu | %4lu | %4lu \n", timestr, statusSocket, countON, valUsage, valGenerating, valExporting);
             fprintf(pFile, "%s", msgbuf);
-            printf("Writen to file:- %s", msgbuf);
+            printf("Writen to log file:- %s", msgbuf);
             fclose(pFile);
         }
         
