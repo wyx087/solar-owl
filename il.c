@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define AVGOVER 20
+#define AVGOVER 8
 #define ONTIMEOUT 50 // After how long turn off everything to redetermine state 
 #define PLUG1ON 120  // 100w feet warmer 
 #define PLUG2ON 520  // 500w radiator 
@@ -108,7 +108,11 @@ int main(int argc, char *argv[])
     int i;
     char *msg1, *msg2;
     char msg3[9];
-    unsigned long valUsage, valGenerating, valExporting;
+    unsigned long valUsage =0, valGenerating =0, valExporting =0;
+    unsigned long avgUsage =0, avgGenerating =0, avgExporting =0;
+    unsigned long sumUsage =0, sumGenerating =0, sumExporting =0;
+    unsigned long aryUsage[AVGOVER] ={0}, aryGenerating[AVGOVER] ={0}, aryExporting[AVGOVER] ={0};
+    int countUsage =0, countGenerating =0, countExporting =0;
     int statusSocket, countON;
     
     FILE * pFile = NULL;
@@ -116,6 +120,8 @@ int main(int argc, char *argv[])
     char logfilename[100];
     time_t rawtime;
     char timestr[30];
+    
+    
     
     pimote_setup (); // Setup Pimote GPIO 
     
@@ -126,6 +132,8 @@ int main(int argc, char *argv[])
       strncpy(logfilename, defaultlogfilename, sizeof(defaultlogfilename));
     }
     printf("Writing to log file:- %s\n\n", logfilename);
+    
+    
 
   u_int yes=1;            /*** MODIFICATION TO ORIGINAL */
   /* create what looks like an ordinary UDP socket */
@@ -167,6 +175,7 @@ int main(int argc, char *argv[])
     msgbuf[nbytes] = 0x00; // null terminate before printing
     puts(msgbuf);
     
+    
     // MY own addition: 
     if (msgbuf[1] == 'e'){  // Electricity usage only 
         msg1 = strstr(msgbuf, "<curr"); // Find generating section of XML 
@@ -175,6 +184,13 @@ int main(int argc, char *argv[])
         strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
         printf("Current Usage String found:- %s\n", msg3);
         valUsage = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
+        
+        // Averaging function: 
+        sumUsage = sumUsage + valUsage - aryUsage[countUsage]; 
+        aryUsage[countUsage] = valUsage; 
+        if (countUsage < AVGOVER -1) countUsage++; else countUsage = 0;
+        avgUsage = sumUsage / AVGOVER;
+        //printf ("avg: %lu / %lu / %d / %lu \n", sumUsage, valUsage, countUsage, avgUsage);
     }
     
     if (msgbuf[1] == 's'){  // Solar information only
@@ -195,6 +211,8 @@ int main(int argc, char *argv[])
         valExporting = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
         // printf("Integer valExporting is %d  \n", valExporting); 
 
+        
+        // Socket switching logic: 
         countON++;  // Keep a count of how long something has been turned on. 
         switch(statusSocket) {
         case 9 :
@@ -245,6 +263,17 @@ int main(int argc, char *argv[])
         } else if (countON > ONTIMEOUT) {
             pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
         }
+        
+        
+        // Averaging function: 
+        sumExporting = sumExporting + valExporting - aryExporting[countExporting]; 
+        aryExporting[countExporting] = valExporting; 
+        if (countExporting < AVGOVER -1) countExporting++; else countExporting = 0;
+        avgExporting = sumExporting / AVGOVER;
+        sumGenerating = sumGenerating + valGenerating - aryGenerating[countGenerating]; 
+        aryGenerating[countGenerating] = valGenerating; 
+        if (countGenerating < AVGOVER -1) countGenerating++; else countGenerating = 0;
+        avgGenerating = sumGenerating / AVGOVER;
         
         
         pFile = fopen(logfilename, "a"); // append the information into a file 
