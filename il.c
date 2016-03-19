@@ -16,7 +16,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define AVGOVER 8
+#define AVGOVER 2
 #define ONTIMEOUT 50 // After how long turn off everything to redetermine state 
 #define PLUG1ON 120  // 100w feet warmer 
 #define PLUG2ON 520  // 500w radiator 
@@ -275,7 +275,7 @@ int main(int argc, char *argv[])
         
         // Get time for later log files         
         time (&rawtime);
-        strftime(timestr, 30, "%d/%m/%y %H:%M:%S", localtime(&rawtime)); // generate desired time format 
+        strftime(timestr, 30, "%d/%m/%Y %H:%M:%S", localtime(&rawtime)); // generate desired time format 
         
         // Averaging and smooth log output: 
         sumExporting = sumExporting + valExporting - aryExporting[countExporting]; 
@@ -286,7 +286,7 @@ int main(int argc, char *argv[])
         aryGenerating[countGenerating] = valGenerating; 
         if (countGenerating < AVGOVER -1) countGenerating++; else countGenerating = 0;
         avgGenerating = sumGenerating / AVGOVER;
-        printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
+        // printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
         if (countExporting == 0) {
             psmoothFile = fopen(logsmoothname, "a"); // append to the end of the file 
             if (psmoothFile == NULL){
