@@ -275,7 +275,7 @@ int main(int argc, char *argv[])
         
         // Get time for later log files         
         time (&rawtime);
-        strftime(timestr, 30, "%d/%m/%Y %H:%M:%S", localtime(&rawtime)); // generate desired time format 
+        strftime(timestr, 30, "%Y/%m/%d %H:%M:%S", localtime(&rawtime)); // generate desired time format 
         
         // Averaging and smooth log output: 
         sumExporting = sumExporting + valExporting - aryExporting[countExporting]; 
@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
                 printf("---ERROR--------smooth log file open failed--------ERROR---\n");
                 fflush(stdout); // print everything in the stdout buffer
             } else {
-                sprintf(msgbuf, "%s , %4lu, %4lu, %4lu \n", timestr, avgUsage, avgGenerating, avgExporting);
+                sprintf(msgbuf, "%s,%lu,%lu,%lu\n", timestr, avgUsage, avgGenerating, avgExporting);
                 fprintf(psmoothFile, "%s", msgbuf);
                 printf("Writen to smooth log file:- %s", msgbuf);
                 fclose(psmoothFile);
