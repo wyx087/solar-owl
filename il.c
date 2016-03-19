@@ -192,7 +192,7 @@ int main(int argc, char *argv[])
         aryUsage[countUsage] = valUsage; 
         if (countUsage < AVGOVER -1) countUsage++; else countUsage = 0;
         avgUsage = sumUsage / AVGOVER;
-        //printf ("avg: %lu / %lu / %d / %lu \n", sumUsage, valUsage, countUsage, avgUsage);
+        // printf ("avg: %lu / %lu / %d / %lu \n", sumUsage, valUsage, countUsage, avgUsage);
     }
     
     if (msgbuf[1] == 's'){  // Solar information only
@@ -232,6 +232,9 @@ int main(int argc, char *argv[])
                 pimote_onoff (1,0);
             } else if (valExporting <= 5) { // Everything off! 
                 pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+            } else {
+                pimote_onoff (2,1);     statusSocket = 2; 
+                pimote_onoff (1,0);
             }
             break;
         case 1 :
@@ -245,6 +248,9 @@ int main(int argc, char *argv[])
                 pimote_onoff (1,1);     statusSocket = 1;
             } else if (valExporting <= 5) { // Everything off! 
                 pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+            } else {
+                pimote_onoff (2,0);
+                pimote_onoff (1,1);     statusSocket = 1;
             }
             break;
         default : 
@@ -280,10 +286,11 @@ int main(int argc, char *argv[])
         aryGenerating[countGenerating] = valGenerating; 
         if (countGenerating < AVGOVER -1) countGenerating++; else countGenerating = 0;
         avgGenerating = sumGenerating / AVGOVER;
-        if (countExporting = 0) {
+        printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
+        if (countExporting == 0) {
             psmoothFile == fopen(logsmoothname, "a"); // append to the end of the file 
             if (psmoothFile == NULL){
-                printf("---ERROR--------file open failed--------ERROR---");
+                printf("---ERROR--------smooth log file open failed--------ERROR---\n");
                 fflush(stdout); // print everything in the stdout buffer
             } else {
                 sprintf(msgbuf, "%s , %4lu, %4lu, %4lu \n", timestr, avgUsage, avgGenerating, avgExporting);
@@ -296,7 +303,7 @@ int main(int argc, char *argv[])
         // Log current status 
         pFile = fopen(logfilename, "a"); // append the information into a file 
         if (pFile == NULL){
-            printf("---ERROR--------file open failed--------ERROR---");
+            printf("---ERROR--------file open failed--------ERROR---\n");
             fflush(stdout); // print everything in the stdout buffer
             exit(1);
         } else {
