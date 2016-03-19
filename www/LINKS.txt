@@ -1,0 +1,9 @@
+
+This file describes the symbolic links used throughout www directory: 
+
+    In www directory: 
+ln -s /home/pi/solar/log log
+
+    In log directory: 
+ln -s /var/tmp/solar_graph.log solar.csv
+

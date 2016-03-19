@@ -15,6 +15,5 @@ fi
 
 file=/var/tmp/solar_graph.log
 DATE=$(date +%Y-%m-%d)
-cp $file /home/pi/solar/log/solar.csv
 mv $file /home/pi/solar/log/solar_$DATE.csv
 
