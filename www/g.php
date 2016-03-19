@@ -5,6 +5,9 @@
   src="dygraph-combined.js"></script>
 </head>
 <body>
+
+<br><br>
+
 <div id="mygraph"
   style="width:800px; height:600px;"></div>
 <script type="text/javascript">
@@ -17,6 +20,7 @@
     }
   );
 </script>
+
 </body>
 </html>
 

@@ -5,7 +5,7 @@
 <body>
 <meta name="viewport" content="width=500, initial-scale=1">
 
-<a href="long.php">Longer version</a> and <a href="g.html">Graph</a> 
+<a href="long.php">Longer version</a> and <a href="g.php">Graph</a> 
 
 <?php
 function read_last_lines($fp, $num){
