@@ -115,10 +115,10 @@ int main(int argc, char *argv[])
     int countUsage =0, countGenerating =0, countExporting =0;
     int statusSocket, countON;
     
-    FILE * pFile = NULL;
-    FILE * psmoothFile = NULL;
-    const char defaultlogfilename[] = "solargen.log";
-    const char logsmoothname[] = "/var/tmp/solar_smooth.log";
+    FILE * pLogFile = NULL;
+    FILE * pGraphFile = NULL;
+    const char defaultlogfilename[] = "/var/tmp/solar.log";
+    const char defaultgraphname[] = "/var/tmp/solar_graph.log";
     char logfilename[100];
     time_t rawtime;
     char timestr[30];
@@ -277,7 +277,7 @@ int main(int argc, char *argv[])
         time (&rawtime);
         strftime(timestr, 30, "%Y/%m/%d %H:%M:%S", localtime(&rawtime)); // generate desired time format 
         
-        // Averaging and smooth log output: 
+        // Averaging and graph log output: 
         sumExporting = sumExporting + valExporting - aryExporting[countExporting]; 
         aryExporting[countExporting] = valExporting; 
         if (countExporting < AVGOVER -1) countExporting++; else countExporting = 0;
@@ -288,29 +288,29 @@ int main(int argc, char *argv[])
         avgGenerating = sumGenerating / AVGOVER;
         // printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
         if (countExporting == 0) {
-            psmoothFile = fopen(logsmoothname, "a"); // append to the end of the file 
-            if (psmoothFile == NULL){
-                printf("---ERROR--------smooth log file open failed--------ERROR---\n");
+            pGraphFile = fopen(defaultgraphname, "a"); // append to the end of the file 
+            if (pGraphFile == NULL){
+                printf("---ERROR--------graph log file open failed--------ERROR---\n");
                 fflush(stdout); // print everything in the stdout buffer
             } else {
                 sprintf(msgbuf, "%s,%lu,%lu,%lu\n", timestr, avgUsage, avgGenerating, avgExporting);
-                fprintf(psmoothFile, "%s", msgbuf);
-                printf("Writen to smooth log file:- %s", msgbuf);
-                fclose(psmoothFile);
+                fprintf(pGraphFile, "%s", msgbuf);
+                printf("Writen to graph log file:- %s", msgbuf);
+                fclose(pGraphFile);
             }
         }
         
         // Log current status 
-        pFile = fopen(logfilename, "a"); // append the information into a file 
-        if (pFile == NULL){
+        pLogFile = fopen(logfilename, "a"); // append the information into a file 
+        if (pLogFile == NULL){
             printf("---ERROR--------file open failed--------ERROR---\n");
             fflush(stdout); // print everything in the stdout buffer
             exit(1);
         } else {
             sprintf(msgbuf, "%s | %d|%2d | %4lu | %4lu | %4lu \n", timestr, statusSocket, countON, valUsage, valGenerating, valExporting);
-            fprintf(pFile, "%s", msgbuf);
+            fprintf(pLogFile, "%s", msgbuf);
             printf("Writen to log file:- %s", msgbuf);
-            fclose(pFile);
+            fclose(pLogFile);
         }
         
         printf ("\n");
