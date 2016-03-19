@@ -288,7 +288,7 @@ int main(int argc, char *argv[])
         avgGenerating = sumGenerating / AVGOVER;
         printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
         if (countExporting == 0) {
-            psmoothFile == fopen(logsmoothname, "a"); // append to the end of the file 
+            psmoothFile = fopen(logsmoothname, "a"); // append to the end of the file 
             if (psmoothFile == NULL){
                 printf("---ERROR--------smooth log file open failed--------ERROR---\n");
                 fflush(stdout); // print everything in the stdout buffer
