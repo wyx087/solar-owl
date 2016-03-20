@@ -12,7 +12,7 @@
     <br>
     
     
-    <select name='files' onchange="newcsvfile()">
+    <select id='dropdownfiles' onchange="drawgraph()">
     <?php
     $files = array_map("htmlspecialchars", scandir("/var/www/log"));
     $last_files = array_reverse($files);
@@ -54,18 +54,20 @@
         // On page load, run: 
         window.onload = function(){
             setTimeout(function() { drawgraph(); }, 10);
-            setTimeout(function() { selectLasthours(2); }, 500);
+            setTimeout(function() { selectLasthours(8); }, 500);
         };
         
         // Drawing the graph 
         function drawgraph() {
+            var csvfile = 'log/' + document.getElementById("dropdownfiles").value;
             g = new Dygraph(
             document.getElementById("mygraph"),
-            "log/solar.csv", 
+            csvfile, 
                 {
                     labels: [ "Time", "Usage", "Generating", "Exporting" ],
                     colors: ['#000000', '#00E000', '#FF0000'],
-                    rollPeriod: 2
+                    rollPeriod: 8, 
+                    showRoller: true
                 }
             );
         };
@@ -84,7 +86,8 @@
         function unzoomGraph() {
         g.updateOptions({
           dateWindow: null,
-          valueRange: null
+          valueRange: null,
+          rollPeriod: 20
         });
         }
         function selectLasthours(hours) {
@@ -93,6 +96,7 @@
         var minX = maxX - hours * 60 * 60 * 1000;
         g.updateOptions({
             dateWindow: [minX, maxX],
+            rollPeriod: hours
         });
         }
         
