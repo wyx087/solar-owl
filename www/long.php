@@ -3,11 +3,16 @@
 <title>Solar generation and usage </title>
 </head>
 <body>
-<meta name="viewport" content="width=500, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <a href="index.php">Back</a>
 
 <?php
+header('Expires: Sun, 01 Jan 2014 00:00:00 GMT');
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Cache-Control: post-check=0, pre-check=0', FALSE);
+header('Pragma: no-cache');
+
 function read_last_lines($fp, $num){
     $idx   = 0;
     $lines = array();
@@ -23,6 +28,18 @@ function read_last_lines($fp, $num){
 }
 
 $file = "/var/tmp/solar.log";
+$f = fopen($file, "r");
+$lines = read_last_lines($f, 20000);
+fclose($f);
+
+$lines = array_reverse($lines);
+foreach($lines as $child) {
+    echo("<pre>");
+    print($child);
+    echo("</pregt;");
+}
+
+$file = "/var/tmp/solar-1.log";
 $f = fopen($file, "r");
 $lines = read_last_lines($f, 20000);
 fclose($f);

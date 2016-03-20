@@ -5,6 +5,7 @@
   src="dygraph-combined.js"></script>
 </head>
 <body>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <br><br>
 

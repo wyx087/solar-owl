@@ -3,7 +3,7 @@
 <title>Solar generation and usage </title>
 </head>
 <body>
-<meta name="viewport" content="width=500, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <a href="long.php">Longer version</a> and <a href="g.php">Graph</a> 
 
