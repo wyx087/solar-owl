@@ -6,6 +6,7 @@
 <meta content="utf-8" http-equiv="encoding">
 <script type="text/javascript"
   src="dygraph-combined.js"></script>
+<title>Solar generation and usage graph </title>
 </head>
 <body>
     <meta name="viewport" content="width=800px, initial-scale=1">
