@@ -11,22 +11,23 @@
     <meta name="viewport" content="width=800px, initial-scale=1">
     <br>
     
+    
+    <select name='files' onchange="newcsvfile()">
     <?php
-        function array_last_lines($list, $num){
-            $idx   = 0;
-            $lines = $list;
-            $p1 = array_slice($lines,    $idx);
-            $p2 = array_slice($lines, 0, $idx);
-            $ordered_lines = array_merge($p1, $p2);
-            return $ordered_lines;
+    $files = array_map("htmlspecialchars", scandir("/var/www/log"));
+    $last_files = array_reverse($files);
+    foreach ($last_files as $file) {
+        if ($i < 1) {
+            echo "<option value='$file'>$file</option>";
+            $i = $i + 1;
+        } else {
+            break;
         }
-        echo "<select name='files' onchange=\"newcsvfile()\">";
-        $files = array_map("htmlspecialchars", scandir("/var/www/log"));
-        $last_files = array_last_lines($files, 2);
-        foreach ($last_files as $file)
-        echo "<option value='$file'>$file</option>";
-        echo "</select>";
+    }
     ?>
+    <option selected="selected" value="solar.csv">solar.csv</option>
+    </select>
+    <br><br>
     
     <div id="mygraph"
         style="width:800px; height:600px;"></div>
@@ -38,11 +39,11 @@
       <input type="button" value="Last 2 hours" onclick="selectLasthours(2)">&nbsp;
       <input type="button" value="Last hour" onclick="selectLasthours(1)">&nbsp;
     </p>
-    <p><b>Select Data to show:</b><br/>
+    <p><b>Select Data to show:</b>
       <input type=checkbox id="0" checked onClick="change(this)">
-      <label for="0"> <font color="#000000">Usage</font></label><br/>
+      <label for="0"> <font color="#000000">Usage</font></label>
       <input type=checkbox id="1" checked onClick="change(this)">
-      <label for="1"> <font color="#00E000">Generating</font></label><br/>
+      <label for="1"> <font color="#00E000">Generating</font></label>
       <input type=checkbox id="2" checked onClick="change(this)">
       <label for="2"> <font color="#FF0000">Exporting</font></label>
     </p>
