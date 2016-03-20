@@ -11,6 +11,23 @@
     <meta name="viewport" content="width=800px, initial-scale=1">
     <br>
     
+    <?php
+        function array_last_lines($list, $num){
+            $idx   = 0;
+            $lines = $list;
+            $p1 = array_slice($lines,    $idx);
+            $p2 = array_slice($lines, 0, $idx);
+            $ordered_lines = array_merge($p1, $p2);
+            return $ordered_lines;
+        }
+        echo "<select name='files' onchange=\"newcsvfile()\">";
+        $files = array_map("htmlspecialchars", scandir("/var/www/log"));
+        $last_files = array_last_lines($files, 2);
+        foreach ($last_files as $file)
+        echo "<option value='$file'>$file</option>";
+        echo "</select>";
+    ?>
+    
     <div id="mygraph"
         style="width:800px; height:600px;"></div>
     
