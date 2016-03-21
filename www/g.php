@@ -18,11 +18,15 @@
     $files = array_map("htmlspecialchars", scandir("/var/www/log"));
     $last_files = array_reverse($files);
     foreach ($last_files as $file) {
-        if ($i < 1) {
+        if ($i > 31) {                // Set a limit of how far back to go 
+            break;
+        } elseif ($file[0] == ".") {  // To prevent . and .. showing up 
+            break;
+        } elseif ($file == "solar.csv"){ // Already adding this entry manually  
+            break;
+        }else {
             echo "<option value='$file'>$file</option>";
             $i = $i + 1;
-        } else {
-            break;
         }
     }
     ?>
