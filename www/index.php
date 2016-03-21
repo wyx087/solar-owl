@@ -2,8 +2,7 @@
 <head>
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
-<script type="text/javascript"
-  src="dygraph-combined.js"></script>
+<script type="text/javascript" src="dygraph-combined.js"></script>
 <title>Solar generation and usage </title>
 </head>
 <body>
@@ -13,7 +12,7 @@
 <br>
 
 <div id="mygraph"
-    style="width:400px; height:300px;"></div>
+    style="width:device-width; height:(device-height/2);"></div>
 <script type="text/javascript">
     // On page load, run: 
     window.onload = function(){
