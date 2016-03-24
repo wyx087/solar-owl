@@ -13,6 +13,7 @@
     
     
     <select id='dropdownfiles' onchange="drawgraph()">
+    <option selected="selected" value="solar.csv">solar.csv</option>
     <?php
     $files = array_map("htmlspecialchars", scandir("/var/www/log"));
     $last_files = array_reverse($files);
@@ -29,7 +30,6 @@
         }
     }
     ?>
-    <option selected="selected" value="solar.csv">solar.csv</option>
     </select>
     <br><br>
     
@@ -70,7 +70,7 @@
                 {
                     labels: [ "Time", "Usage", "Generating", "Exporting" ],
                     colors: ['#000000', '#00E000', '#FF0000'],
-                    rollPeriod: 8, 
+                    rollPeriod: 20, 
                     showRoller: true
                 }
             );
