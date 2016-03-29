@@ -15,7 +15,7 @@
     <select id='dropdownfiles' onchange="drawgraph()">
     <option selected="selected" value="solar.csv">solar.csv</option>
     <?php
-    $files = array_map("htmlspecialchars", scandir("/var/www/html/log"));
+    $files = array_map("htmlspecialchars", scandir("/var/www/html/solar/log"));
     $last_files = array_reverse($files);
     foreach ($last_files as $file) {
         if ($i > 31) {                // Set a limit of how far back to go 
