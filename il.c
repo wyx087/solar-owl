@@ -16,12 +16,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define AVGOVER 2
-#define ONTIMEOUT 50 // After how long turn off everything to redetermine state 
-#define PLUG1ON 80 
-#define PLUG2ON 600  // 500w radiator 
-#define PLUGSON 700
+/****** Adjustable variables **************/
+#define AVGOVER 1
+#define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
+#define POWERFACTOR  1.00
+#define VOLTAGE      245
+#define PLUG1ON_C    0.47 
+#define PLUG2ON_C    2.70
+#define PLUGSON_C    0.50
+/*******************************************/
+
+
+
+#define PLUG1ON     (PLUG1ON_C * VOLTAGE * POWERFACTOR) 
+#define PLUG2ON     (PLUG2ON_C * VOLTAGE * POWERFACTOR)
+#define PLUGSON     (PLUGSON_C * VOLTAGE * POWERFACTOR)
 
 
 #define HELLO_PORT 22600
@@ -240,7 +250,7 @@ int main(int argc, char *argv[])
         case 1 :
             if (valExporting >= (PLUGSON - PLUG1ON + 50)) { // Turn everything on! 
                 pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
-            } else if (valExporting >= (PLUG2ON - 20)) {
+            } else if (valExporting >= PLUG2ON) {
                 pimote_onoff (2,1);     statusSocket = 2;   countON = 0; 
                 pimote_onoff (1,0);
             } else if (valExporting >= PLUG1ON) {
