@@ -24,7 +24,7 @@
 #define VOLTAGE      245
 #define PLUG1ON_C    0.47 
 #define PLUG2ON_C    2.70
-#define PLUGSON_C    0.50
+#define PLUGSON_C    3.10
 /*******************************************/
 
 
