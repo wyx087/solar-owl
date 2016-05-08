@@ -17,7 +17,7 @@
 #include <stdlib.h>
 
 /****** Adjustable variables **************/
-#define AVGOVER 1
+#define AVGOVER 3
 #define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
 #define POWERFACTOR  1.00
@@ -40,15 +40,15 @@
 
 // vvvvvv -- Pimote control code -- vvvvvv 
 //    Insert at the top of the code 
-#include <wiringPi.h>
+/*#include <wiringPi.h>
   #define	D0	    0
   #define	D1	    3
   #define	D2	    4
   #define	D3	    2
   #define	ModSel  5
-  #define	CE      6 
+  #define	CE      6 */
 int pimote_setup (void) {
-  wiringPiSetup () ;
+/*  wiringPiSetup () ;
   // Set GPIO modes 
   pinMode (D0, OUTPUT);
   pinMode (D1, OUTPUT);
@@ -64,11 +64,11 @@ int pimote_setup (void) {
   digitalWrite (D3, LOW);
   digitalWrite (ModSel, LOW);
   digitalWrite (CE, LOW);
-  delay (100);    // in ms  
+  delay (100);    // in ms  */
 }
 int pimote_onoff (int socket, int on1off) {
   int r = 0;
-  if (on1off == 1) {
+/*  if (on1off == 1) {
     printf ("Pimote turning ON ");
     digitalWrite (D3, HIGH);  // Turn on 
   } else {
@@ -102,7 +102,7 @@ int pimote_onoff (int socket, int on1off) {
   digitalWrite (CE, HIGH);
   delay (250) ; 
   digitalWrite (CE, LOW);
-  delay (650) ;  
+  delay (650) ;  */
   return r;
 }
 // ^^^^^^ -- Pimote control code -- ^^^^^^  
@@ -124,13 +124,13 @@ int main(int argc, char *argv[])
     unsigned long aryUsage[AVGOVER] ={0}, aryGenerating[AVGOVER] ={0}, aryExporting[AVGOVER] ={0};
     int countUsage =0, countGenerating =0, countExporting =0;
     int statusSocket, countON;
-    // int statusBoinc;
+    int statusBoinc;
     
     FILE * pLogFile = NULL;
     FILE * pGraphFile = NULL;
-    // const char defaultlogfilename[] = "/cygdrive/h/solar.log";
-    const char defaultlogfilename[] = "/var/tmp/solar.log";
-    const char defaultgraphname[] = "/var/tmp/solar_graph.log";
+    const char defaultlogfilename[] = "/cygdrive/h/__Logs__/solar.log";
+    // const char defaultlogfilename[] = "/var/tmp/solar.log";
+    // const char defaultgraphname[] = "/var/tmp/solar_graph.log";
     char logfilename[100];
     time_t rawtime;
     char timestr[30];
@@ -300,16 +300,20 @@ int main(int argc, char *argv[])
         avgGenerating = sumGenerating / AVGOVER;
         // printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
         if (countExporting == 0) {
-            pGraphFile = fopen(defaultgraphname, "a"); // append to the end of the file 
-            if (pGraphFile == NULL){
-                printf("---ERROR--------graph log file open failed--------ERROR---\n");
-                fflush(stdout); // print everything in the stdout buffer
-            } else {
-                sprintf(msgbuf, "%s,%lu,%lu,%lu\n", timestr, avgUsage, avgGenerating, avgExporting);
-                fprintf(pGraphFile, "%s", msgbuf);
-                printf("Writen to graph log file:- %s", msgbuf);
-                fclose(pGraphFile);
+            // vvvvv  Additional logic here for BIONIC  vvvvvvvvvvvv
+            if (avgExporting < 10 && statusSocket == 0) {   // Turn BOINC off 
+                // printf ("\n\n BOINC OFF, Average: %d \n\n", avgExporting);
+                statusBoinc = 11;
+                system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode never");
+            } else if (avgExporting > 200 && valExporting > 200) {    // Turn BOINC on 
+                // printf ("\n\n BOINC ON, Average: %d \n\n", avgExporting);
+                statusBoinc = 99;
+                system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode auto");
+            } else {    // BOINC no change 
+                // printf ("\n\n BOINC stay, Average: %d \n\n", avgExporting);
+                statusBoinc = 0;
             }
+            // ^^^^^  Additional logic here for BIONIC  vvvvvvvvvvvv
         }
         
         // Log current status 
@@ -319,7 +323,7 @@ int main(int argc, char *argv[])
             fflush(stdout); // print everything in the stdout buffer
             exit(1);
         } else {
-            sprintf(msgbuf, "%s | %d|%3d | %4lu | %4lu | %4lu \n", timestr, statusSocket, countON, valUsage, valGenerating, valExporting);
+            sprintf(msgbuf, "%s | %d|%2d | %4lu | %4lu | %4lu \n", timestr, statusSocket, statusBoinc, valUsage, valGenerating, valExporting);
             fprintf(pLogFile, "%s", msgbuf);
             printf("Writen to log file:- %s", msgbuf);
             fclose(pLogFile);
