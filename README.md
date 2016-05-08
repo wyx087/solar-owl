@@ -24,5 +24,3 @@ A few things to note:
 
 To do for il.c:
 - INI parser: https://github.com/benhoyt/inih
-- WOL my PC
-- Communicate with PC to set workload (maybe not wiht pc.c)
