@@ -17,7 +17,8 @@
 #include <stdlib.h>
 
 /****** Adjustable variables **************/
-#define AVGOVER 1
+#define AVGOVER 50 
+#define SHUTDOWNCOUNT 20
 #define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
 #define POWERFACTOR  1.00
@@ -124,7 +125,7 @@ int main(int argc, char *argv[])
     unsigned long aryUsage[AVGOVER] ={0}, aryGenerating[AVGOVER] ={0}, aryExporting[AVGOVER] ={0};
     int countUsage =0, countGenerating =0, countExporting =0;
     int statusSocket, countON;
-    // int statusBoinc;
+    int statusBoinc = 0, countShutdown = SHUTDOWNCOUNT;
     
     FILE * pLogFile = NULL;
     FILE * pGraphFile = NULL;
@@ -300,16 +301,26 @@ int main(int argc, char *argv[])
         avgGenerating = sumGenerating / AVGOVER;
         // printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
         if (countExporting == 0) {
-            pGraphFile = fopen(defaultgraphname, "a"); // append to the end of the file 
-            if (pGraphFile == NULL){
-                printf("---ERROR--------graph log file open failed--------ERROR---\n");
-                fflush(stdout); // print everything in the stdout buffer
+            // vvvvv  Additional logic here for WOL  vvvvvvvvvvvv
+            if (avgExporting > 200) {
+                statusBoinc = 88;
+                system(". ../wol/wol_main.sh");
             } else {
-                sprintf(msgbuf, "%s,%lu,%lu,%lu\n", timestr, avgUsage, avgGenerating, avgExporting);
-                fprintf(pGraphFile, "%s", msgbuf);
-                printf("Writen to graph log file:- %s", msgbuf);
-                fclose(pGraphFile);
+                statusBoinc = 0;
             }
+            // ^^^^^  Additional logic here for WOL  vvvvvvvvvvvv
+        }
+        
+        // Log file for graph 
+        pGraphFile = fopen(defaultgraphname, "a"); // append to the end of the file 
+        if (pGraphFile == NULL){
+            printf("---ERROR--------graph log file open failed--------ERROR---\n");
+            fflush(stdout); // print everything in the stdout buffer
+        } else {
+            sprintf(msgbuf, "%s,%lu,%lu,%lu\n", timestr, valUsage, valGenerating, valExporting);
+            fprintf(pGraphFile, "%s", msgbuf);
+            printf("Writen to graph log file:- %s", msgbuf);
+            fclose(pGraphFile);
         }
         
         // Log current status 
@@ -319,7 +330,7 @@ int main(int argc, char *argv[])
             fflush(stdout); // print everything in the stdout buffer
             exit(1);
         } else {
-            sprintf(msgbuf, "%s | %d | %4lu | %4lu | %4lu \n", timestr, statusSocket, valUsage, valGenerating, valExporting);
+            sprintf(msgbuf, "%s | %d|%2d | %4lu | %4lu | %4lu \n", timestr, statusSocket, statusBoinc, valUsage, valGenerating, valExporting);
             fprintf(pLogFile, "%s", msgbuf);
             printf("Writen to log file:- %s", msgbuf);
             fclose(pLogFile);

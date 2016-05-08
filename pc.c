@@ -18,6 +18,7 @@
 
 /****** Adjustable variables **************/
 #define AVGOVER 3
+#define SHUTDOWNCOUNT 20
 #define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
 #define POWERFACTOR  1.00
@@ -124,7 +125,7 @@ int main(int argc, char *argv[])
     unsigned long aryUsage[AVGOVER] ={0}, aryGenerating[AVGOVER] ={0}, aryExporting[AVGOVER] ={0};
     int countUsage =0, countGenerating =0, countExporting =0;
     int statusSocket, countON;
-    int statusBoinc;
+    int statusBoinc = 0, countShutdown = SHUTDOWNCOUNT;
     
     FILE * pLogFile = NULL;
     FILE * pGraphFile = NULL;
@@ -302,19 +303,33 @@ int main(int argc, char *argv[])
         if (countExporting == 0) {
             // vvvvv  Additional logic here for BIONIC  vvvvvvvvvvvv
             if (avgExporting < 10 && statusSocket == 0) {   // Turn BOINC off 
-                // printf ("\n\n BOINC OFF, Average: %d \n\n", avgExporting);
+                countShutdown = countShutdown - 1;
                 statusBoinc = 11;
                 system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode never");
             } else if (avgExporting > 200 && valExporting > 200) {    // Turn BOINC on 
-                // printf ("\n\n BOINC ON, Average: %d \n\n", avgExporting);
+                countShutdown = SHUTDOWNCOUNT;
                 statusBoinc = 99;
                 system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode auto");
             } else {    // BOINC no change 
-                // printf ("\n\n BOINC stay, Average: %d \n\n", avgExporting);
                 statusBoinc = 0;
+            }
+            if (countShutdown <= 0) {   // Too many instances low power, turn off computer 
+                system("cmd /C shutdown -s -t 600");
             }
             // ^^^^^  Additional logic here for BIONIC  vvvvvvvvvvvv
         }
+        
+        // Log file for graph 
+        /* pGraphFile = fopen(defaultgraphname, "a"); // append to the end of the file 
+        if (pGraphFile == NULL){
+            printf("---ERROR--------graph log file open failed--------ERROR---\n");
+            fflush(stdout); // print everything in the stdout buffer
+        } else {
+            sprintf(msgbuf, "%s,%lu,%lu,%lu\n", timestr, valUsage, valGenerating, valExporting);
+            fprintf(pGraphFile, "%s", msgbuf);
+            printf("Writen to graph log file:- %s", msgbuf);
+            fclose(pGraphFile);
+        }*/
         
         // Log current status 
         pLogFile = fopen(logfilename, "a"); // append the information into a file 
