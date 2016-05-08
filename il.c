@@ -317,7 +317,7 @@ int main(int argc, char *argv[])
             fflush(stdout); // print everything in the stdout buffer
             exit(1);
         } else {
-            sprintf(msgbuf, "%s | %d|%2d | %4lu | %4lu | %4lu \n", timestr, statusSocket, countON, valUsage, valGenerating, valExporting);
+            sprintf(msgbuf, "%s | %d|%3d | %4lu | %4lu | %4lu \n", timestr, statusSocket, countON, valUsage, valGenerating, valExporting);
             fprintf(pLogFile, "%s", msgbuf);
             printf("Writen to log file:- %s", msgbuf);
             fclose(pLogFile);

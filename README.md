@@ -20,3 +20,9 @@ A few things to note:
 - Inside www/LINKS.TXT details the links required for the graph webpage 
 - There are 2 background scheduled tasks: owl_background on boot and logtrim.sh at night. 
 - The log file columns are as follow: date and time | statusSocket | current status counter | Usage reading | Generation reading | Export reading 
+
+
+To do for il.c:
+- INI parser: https://github.com/benhoyt/inih
+- WOL my PC
+- Communicate with PC to set workload (maybe not wiht pc.c)
