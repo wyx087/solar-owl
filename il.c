@@ -300,16 +300,15 @@ int main(int argc, char *argv[])
         if (countGenerating < AVGOVER -1) countGenerating++; else countGenerating = 0;
         avgGenerating = sumGenerating / AVGOVER;
         // printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
+        // vvvvv  Additional logic here for WOL  vvvvvvvvvvvv
+        statusBoinc = 0;
         if (countExporting == 0) {
-            // vvvvv  Additional logic here for WOL  vvvvvvvvvvvv
             if (avgExporting > 200) {
                 statusBoinc = 88;
                 system(". ../wol/wol_main.sh");
-            } else {
-                statusBoinc = 0;
-            }
-            // ^^^^^  Additional logic here for WOL  vvvvvvvvvvvv
+            } 
         }
+        // ^^^^^  Additional logic here for WOL  vvvvvvvvvvvv
         
         // Log file for graph 
         pGraphFile = fopen(defaultgraphname, "a"); // append to the end of the file 

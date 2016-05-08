@@ -300,8 +300,9 @@ int main(int argc, char *argv[])
         if (countGenerating < AVGOVER -1) countGenerating++; else countGenerating = 0;
         avgGenerating = sumGenerating / AVGOVER;
         // printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
+        // vvvvv  Additional logic here for BIONIC  vvvvvvvvvvvv
+        statusBoinc = 0;
         if (countExporting == 0) {
-            // vvvvv  Additional logic here for BIONIC  vvvvvvvvvvvv
             if (avgExporting < 10 && statusSocket == 0) {   // Turn BOINC off 
                 countShutdown = countShutdown - 1;
                 statusBoinc = 11;
@@ -310,14 +311,12 @@ int main(int argc, char *argv[])
                 countShutdown = SHUTDOWNCOUNT;
                 statusBoinc = 99;
                 system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode auto");
-            } else {    // BOINC no change 
-                statusBoinc = 0;
             }
             if (countShutdown <= 0) {   // Too many instances low power, turn off computer 
                 system("cmd /C shutdown -s -t 600");
             }
-            // ^^^^^  Additional logic here for BIONIC  vvvvvvvvvvvv
         }
+        // ^^^^^  Additional logic here for BIONIC  vvvvvvvvvvvv
         
         // Log file for graph 
         /* pGraphFile = fopen(defaultgraphname, "a"); // append to the end of the file 
@@ -336,7 +335,7 @@ int main(int argc, char *argv[])
         if (pLogFile == NULL){
             printf("---ERROR--------file open failed--------ERROR---\n");
             fflush(stdout); // print everything in the stdout buffer
-            exit(1);
+            // exit(1);
         } else {
             sprintf(msgbuf, "%s | %d|%2d | %4lu | %4lu | %4lu \n", timestr, statusSocket, statusBoinc, valUsage, valGenerating, valExporting);
             fprintf(pLogFile, "%s", msgbuf);
