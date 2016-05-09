@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
         if (countExporting == 0) {
             if (avgExporting > 200) {
                 statusBoinc = 88;
-                system(". ../wol/wol_main.sh");
+                system(". /home/pi/wol/wol_main.sh");
             } 
         }
         // ^^^^^  Additional logic here for WOL  vvvvvvvvvvvv
