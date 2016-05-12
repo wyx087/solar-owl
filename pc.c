@@ -18,7 +18,7 @@
 
 /****** Adjustable variables **************/
 #define AVGOVER 3
-#define SHUTDOWNCOUNT 20
+#define SHUTDOWNCOUNT 10
 #define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
 #define POWERFACTOR  1.00
@@ -26,6 +26,7 @@
 #define PLUG1ON_C    0.47 
 #define PLUG2ON_C    2.70
 #define PLUGSON_C    3.10
+#define PCLOAD_C     0.82 
 /*******************************************/
 
 
@@ -33,6 +34,7 @@
 #define PLUG1ON     (PLUG1ON_C * VOLTAGE * POWERFACTOR) 
 #define PLUG2ON     (PLUG2ON_C * VOLTAGE * POWERFACTOR)
 #define PLUGSON     (PLUGSON_C * VOLTAGE * POWERFACTOR)
+#define PCLOAD      (PCLOAD_C  * VOLTAGE * POWERFACTOR)
 
 
 #define HELLO_PORT 22600
@@ -303,11 +305,11 @@ int main(int argc, char *argv[])
         // vvvvv  Additional logic here for BIONIC  vvvvvvvvvvvv
         statusBoinc = 0;
         if (countExporting == 0) {
-            if (avgExporting < 10 && statusSocket == 0) {   // Turn BOINC off 
+            if (avgExporting < 30 && statusSocket == 0) {   // Turn BOINC off 
                 countShutdown = countShutdown - 1;
                 statusBoinc = 11;
                 system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode never");
-            } else if (avgExporting > 200 && valExporting > 200) {    // Turn BOINC on 
+            } else if (avgExporting > PCLOAD && valExporting > PCLOAD) {    // Turn BOINC on 
                 countShutdown = SHUTDOWNCOUNT;
                 statusBoinc = 99;
                 system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode auto");
@@ -337,7 +339,7 @@ int main(int argc, char *argv[])
             fflush(stdout); // print everything in the stdout buffer
             // exit(1);
         } else {
-            sprintf(msgbuf, "%s | %d|%2d | %4lu | %4lu | %4lu \n", timestr, statusSocket, statusBoinc, valUsage, valGenerating, valExporting);
+            sprintf(msgbuf, "%s | %d|%2d|%2d | %4lu | %4lu | %4lu \n", timestr, statusSocket, statusBoinc, countShutdown, valUsage, valGenerating, valExporting);
             fprintf(pLogFile, "%s", msgbuf);
             printf("Writen to log file:- %s", msgbuf);
             fclose(pLogFile);

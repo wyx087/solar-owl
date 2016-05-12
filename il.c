@@ -18,7 +18,7 @@
 
 /****** Adjustable variables **************/
 #define AVGOVER 50 
-#define SHUTDOWNCOUNT 20
+#define SHUTDOWNCOUNT 10
 #define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
 #define POWERFACTOR  1.00
@@ -26,6 +26,7 @@
 #define PLUG1ON_C    0.47 
 #define PLUG2ON_C    2.70
 #define PLUGSON_C    3.10
+#define PCLOAD_C     0.82 
 /*******************************************/
 
 
@@ -33,6 +34,7 @@
 #define PLUG1ON     (PLUG1ON_C * VOLTAGE * POWERFACTOR) 
 #define PLUG2ON     (PLUG2ON_C * VOLTAGE * POWERFACTOR)
 #define PLUGSON     (PLUGSON_C * VOLTAGE * POWERFACTOR)
+#define PCLOAD      (PCLOAD_C  * VOLTAGE * POWERFACTOR)
 
 
 #define HELLO_PORT 22600
@@ -303,7 +305,7 @@ int main(int argc, char *argv[])
         // vvvvv  Additional logic here for WOL  vvvvvvvvvvvv
         statusBoinc = 0;
         if (countExporting == 0) {
-            if (avgExporting > 200) {
+            if (avgExporting > PCLOAD) {
                 statusBoinc = 88;
                 system(". /home/pi/wol/wol_main.sh");
             } 
