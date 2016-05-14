@@ -312,10 +312,11 @@ int main(int argc, char *argv[])
             } else if (avgExporting > PCLOAD && valExporting > PCLOAD) {    // Turn BOINC on 
                 countShutdown = SHUTDOWNCOUNT;
                 statusBoinc = 99;
+                system("cmd /C shutdown -a");
                 system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode auto");
             }
             if (countShutdown <= 0) {   // Too many instances low power, turn off computer 
-                system("cmd /C shutdown -s -t 600");
+                system("cmd /C shutdown -s -t 300");
             }
         }
         // ^^^^^  Additional logic here for BIONIC  vvvvvvvvvvvv
