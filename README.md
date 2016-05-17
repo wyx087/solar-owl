@@ -11,8 +11,8 @@ Requirements for il.c:
 
 - OWL Intuition Solar PV monitor 
 - Raspberry Pi 1 (should work with newer) 
-- Pimote and 2 sockets from Energenie 
-- wiringPi library for RaspberryPi GPIO interactions 
+- Pimote and 2 sockets from Energenie (see pc.c on how to comment out this part if you only want data logging) 
+- wiringPi library for RaspberryPi GPIO interactions (not needed for data logging) 
 
 The dataflow for il.c and www parts on Raspberry Pi: 
 
@@ -28,10 +28,11 @@ The dataflow for il.c and www parts on Raspberry Pi:
 A few things to note: 
 
 - The log files will disappear if RPi power gets turned off because it is stored in RAMdisk. 
+- On RPi, there should be 2 background scheduled tasks: compiled il.c program on boot and logtrim.sh at 23:59. 
 - To build il.c, use the following command: gcc -lwiringPi -o il il.c 
+- To build pc.c, no special command is needed, Linux or Cygwin envirounment recommended. 
 - Inside www/LINKS.TXT details the links required for the graph webpage 
-- On RPi, there should be 2 background scheduled tasks: compiled il.c on boot and logtrim.sh at 23:59. 
-- The log file columns are defined near the end of C files 
+- The definition for log file columns are found near the end of C files 
 - Attempt has been made to keep similarity between il.c and pc.c so that the updates and bug fixes can be applied to both easily. 
 
 
