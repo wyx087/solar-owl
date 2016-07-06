@@ -17,7 +17,7 @@ Requirements for il.c:
 
 Requirements for www: 
 
-- Install lighttpd 
+- Install lighttpd and php 
 - Create symbolic links as detailed in LINKS.txt 
 
 The dataflow for il.c and www parts on Raspberry Pi: 
@@ -30,10 +30,11 @@ The dataflow for il.c and www parts on Raspberry Pi:
   b. Records its state and current usage/generation/export information into a file on RAMdisk (/var/tmp) 
 5. Use any web browser navigate to RaspberryPi and see a graph and log files  (/var/www) 
 6. At night, a bash script is run to archive the log file and trim the live log file if it's too big (logtrim.sh)
+    Log files are archived at /home/pi/solar/log 
 
 A few things to note: 
 
-- The log files will disappear if RPi power gets turned off because it is stored in RAMdisk. 
+- The current log file will disappear if RPi power gets turned off because it is stored in RAMdisk. Archived files will not disappear.
 - On RPi, there should be 2 background scheduled tasks: compiled il.c program on boot and logtrim.sh at 23:59. 
 - To build il.c, use the following command: gcc -lwiringPi -o il il.c 
 - To build pc.c, no special command is needed, Linux or Cygwin envirounment recommended. 
