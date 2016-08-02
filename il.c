@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
         // vvvvv  Additional logic here for WOL  vvvvvvvvvvvv
         statusBoinc = 0;
         if (countExporting == 0) {
-            if (avgExporting > PCLOAD) {
+            if (avgExporting > PCLOAD && valExporting > PCLOAD) {
                 statusBoinc = 88;
                 system(". /home/pi/wol/wol_main.sh");
             } 
