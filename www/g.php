@@ -8,7 +8,7 @@
 <title>Solar generation and usage graph </title>
 </head>
 <body>
-    <meta name="viewport" content="width=800px, initial-scale=1">
+    <meta name="viewport" content="width=800px">
     <br>
     
     

@@ -6,13 +6,13 @@
 <title>Solar generation and usage </title>
 </head>
 <body>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=610">
 
 <a href="long.php">Longer text log</a> or <a href="g.php">Full and larger graph</a> 
 <br>
 
 <div id="mygraph"
-    style="width:device-width; height:(device-height/2);"></div>
+    style="width:600; height:480;"></div>
 <script type="text/javascript">
     // On page load, run: 
     window.onload = function(){

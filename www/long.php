@@ -6,7 +6,7 @@
 <title>Solar generation and usage </title>
 </head>
 <body>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=500">
 
 <a href="index.php">Back</a>
 
