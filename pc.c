@@ -50,7 +50,7 @@
   #define	D3	    2
   #define	ModSel  5
   #define	CE      6 */
-int pimote_setup (void) {
+void pimote_setup (void) {
 /*  wiringPiSetup () ;
   // Set GPIO modes 
   pinMode (D0, OUTPUT);
@@ -190,7 +190,7 @@ int main(int argc, char *argv[])
       exit(1);
     }
     msgbuf[nbytes] = 0x00; // null terminate before printing
-    puts(msgbuf);
+    // puts(msgbuf);
     
     
     // MY own addition: 
@@ -199,7 +199,7 @@ int main(int argc, char *argv[])
         msg1 = strstr(msg1, ">"); // Find the start of number 
         msg2 = strstr(msg1, "."); // Find the end of number 
         strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
-        printf("Current Usage String found:- %s\n", msg3);
+        // printf("Current Usage String found:- %s\n", msg3);
         valUsage = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
         
         // Averaging function: 
@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
         msg1 = strstr(msg1, ">"); // Find the start of number 
         msg2 = strstr(msg1, "."); // Find the end of number 
         strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
-        printf("Generating String found:- %s\n", msg3);
+        // printf("Generating String found:- %s\n", msg3);
         valGenerating = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
         // printf("Integer valGenerating is %d  \n", valGenerating); 
         
@@ -224,7 +224,7 @@ int main(int argc, char *argv[])
         msg1 = strstr(msg1, ">"); // Find the start of number 
         msg2 = strstr(msg1, "."); // Find the end of number 
         strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
-        printf("Exporting String found:- %s\n", msg3);
+        // printf("Exporting String found:- %s\n", msg3);
         valExporting = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
         // printf("Integer valExporting is %d  \n", valExporting); 
 
@@ -318,6 +318,11 @@ int main(int argc, char *argv[])
             if (countShutdown <= 0) {   // Too many instances low power, turn off computer 
                 system("cmd /C shutdown -s -t 300");
             }
+        }
+        if (valExporting <= 1 && (valUsage - valGenerating) >= 200) { // Big appliance using elec
+            printf("Big appliance detected, turning off BOINC. \n");
+            countShutdown = 1;
+            system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode never");
         }
         // ^^^^^  Additional logic here for BIONIC  vvvvvvvvvvvv
         
