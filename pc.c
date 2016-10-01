@@ -319,9 +319,9 @@ int main(int argc, char *argv[])
                 system("cmd /C shutdown -s -t 300");
             }
         }
-        if (valExporting <= 1 && (valUsage - valGenerating) >= 200) { // Big appliance using elec
+        if (valExporting <= 1 && ((valUsage - valGenerating) >= 200)) { // Big appliance using elec
             printf("Big appliance detected, turning off BOINC. \n");
-            countShutdown = 1;
+            if (countShutdown > 1) countShutdown = 1;
             system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode never");
         }
         // ^^^^^  Additional logic here for BIONIC  vvvvvvvvvvvv
