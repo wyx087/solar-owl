@@ -121,10 +121,10 @@ int main(int argc, char *argv[])
     int i;
     char *msg1, *msg2;
     char msg3[9];
-    unsigned long valUsage =0, valGenerating =0, valExporting =0;
-    unsigned long avgUsage =0, avgGenerating =0, avgExporting =0;
-    unsigned long sumUsage =0, sumGenerating =0, sumExporting =0;
-    unsigned long aryUsage[AVGOVER] ={0}, aryGenerating[AVGOVER] ={0}, aryExporting[AVGOVER] ={0};
+    signed long valUsage =0, valGenerating =0, valExporting =0;
+    signed long avgUsage =0, avgGenerating =0, avgExporting =0;
+    signed long sumUsage =0, sumGenerating =0, sumExporting =0;
+    signed long aryUsage[AVGOVER] ={0}, aryGenerating[AVGOVER] ={0}, aryExporting[AVGOVER] ={0};
     int countUsage =0, countGenerating =0, countExporting =0;
     int statusSocket, countON;
     int statusBoinc = 0, countShutdown = SHUTDOWNCOUNT;
@@ -200,7 +200,7 @@ int main(int argc, char *argv[])
         msg2 = strstr(msg1, "."); // Find the end of number 
         strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
         // printf("Current Usage String found:- %s\n", msg3);
-        valUsage = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
+        valUsage = strtol(msg3, NULL, 10); // Convert the number to long 
         
         // Averaging function: 
         sumUsage = sumUsage + valUsage - aryUsage[countUsage]; 
@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
         msg2 = strstr(msg1, "."); // Find the end of number 
         strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
         // printf("Generating String found:- %s\n", msg3);
-        valGenerating = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
+        valGenerating = strtol(msg3, NULL, 10); // Convert the number to long 
         // printf("Integer valGenerating is %d  \n", valGenerating); 
         
         msg1 = strstr(msgbuf, "exporting"); // Find exporting section of XML 
@@ -225,7 +225,7 @@ int main(int argc, char *argv[])
         msg2 = strstr(msg1, "."); // Find the end of number 
         strncpy(msg3, msg1 + 1, msg2 - msg1); // Extract the number out to a string 
         // printf("Exporting String found:- %s\n", msg3);
-        valExporting = strtoul(msg3, NULL, 10); // Convert the number to unsigned long 
+        valExporting = strtol(msg3, NULL, 10); // Convert the number to long 
         // printf("Integer valExporting is %d  \n", valExporting); 
 
         
