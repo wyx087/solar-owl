@@ -21,9 +21,11 @@
         if ($i > 31) {                // Set a limit of how far back to go 
             break;
         } elseif ($file[0] == ".") {  // To prevent . and .. showing up 
-            break;
+            null;
         } elseif ($file == "solar.csv"){ // Already adding this entry manually  
-            break;
+            null;
+        } elseif ($file == "solarshort.csv"){ // Solarshort is for index page and pi page only 
+            null;
         }else {
             echo "<option value='$file'>$file</option>";
             $i = $i + 1;
@@ -71,7 +73,10 @@
                     labels: [ "Time", "Usage", "Generating", "Exporting" ],
                     colors: ['#000000', '#00E000', '#FF0000'],
                     rollPeriod: 20, 
-                    showRoller: true
+                    showRoller: true,
+                    series: {
+                       Generating: { fillGraph: true }
+                    }
                 }
             );
         };

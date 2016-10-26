@@ -14,28 +14,19 @@
 <div id="mygraph"
     style="width:600; height:480;"></div>
 <script type="text/javascript">
-    // On page load, run: 
-    window.onload = function(){
-        setTimeout(function() { selectLasthours(2); }, 500);
-    };
     
     g = new Dygraph(
     document.getElementById("mygraph"),
-    "log/solar.csv", 
+    "log/solarshort.csv", 
         {
             labels: [ "Time", "Usage", "Generating", "Exporting" ],
-            colors: ['#000000', '#00E000', '#FF0000']
+            colors: ['#000000', '#00E000', '#FF0000'],
+            series: {
+                Generating: { fillGraph: true }
+            }
         }
     );
     
-    function selectLasthours(hours) {
-    var range = g.xAxisRange();
-    var maxX = range[1];
-    var minX = maxX - hours * 60 * 60 * 1000;
-    g.updateOptions({
-        dateWindow: [minX, maxX],
-    });
-    }
 </script>
 
 <?php

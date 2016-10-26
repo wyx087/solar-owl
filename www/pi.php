@@ -1,6 +1,6 @@
 <html>
 <head>
-<meta http-equiv="refresh" content="20" > 
+<meta http-equiv="refresh" content="15" > 
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
@@ -28,7 +28,10 @@
                 {
                     labels: [ "Time", "Usage", "Generating", "Exporting" ],
                     colors: ['#FFFFFF', '#00E000', '#FF0000'],
-                    "axisLabelColor": "white"
+                    "axisLabelColor": "white",
+                    series: {
+                       Generating: { fillGraph: true }
+                    }
                 }
             );
         };

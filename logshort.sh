@@ -14,5 +14,5 @@ while [ 1 ]; do
     tail -n $size $filein > $fileout
   fi
 
-  sleep 15
+  sleep 8 
 done
