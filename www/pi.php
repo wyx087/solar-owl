@@ -1,18 +1,27 @@
 <html>
 <head>
 <meta http-equiv="refresh" content="15" > 
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7; IE=EmulateIE9">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+
 <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 <meta content="utf-8" http-equiv="encoding">
-<script type="text/javascript"
-  src="dygraph-combined.js"></script>
+<script type="text/javascript" src="dygraph-combined.js"></script>
+
 <title>Solar generation and usage graph </title>
 </head>
 <body bgcolor="#000000"> 
     <meta name="viewport" content="width=320px">
     
+    <div align="center"><font color=#c7cbe3><font size="4">
+        <?php
+        echo date("l . d-m-Y . h:i a");
+        ?>
+    </font></font></div>
+    
     <div id="mygraph"
-        style="width:470px; height:300px;"></div>
+        style="width:470px; height:280px;"></div>
     
     <script type="text/javascript">
         // On page load, run: 
@@ -36,18 +45,8 @@
             );
         };
         
-        // For zoom buttons 
-        function selectLasthours(hours) {
-        var range = g.xAxisRange();
-        var maxX = range[1];
-        var minX = maxX - hours * 60 * 60 * 1000;
-        g.updateOptions({
-            dateWindow: [minX, maxX],
-            rollPeriod: hours
-        });
-        }
-        
     </script>
+    
 
 </body>
 </html>

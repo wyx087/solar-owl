@@ -22,11 +22,11 @@
 #define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
 #define POWERFACTOR  1.00
-#define VOLTAGE      245
-#define PLUG1ON_C    0.47 
+#define VOLTAGE      230
+#define PLUG1ON_C    0.21 
 #define PLUG2ON_C    2.70
-#define PLUGSON_C    3.10
-#define PCLOAD_C     0.82 
+#define PLUGSON_C    2.80
+#define PCLOAD_C     0.80 
 /*******************************************/
 
 
