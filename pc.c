@@ -2,9 +2,6 @@
  * listener.c -- joins a multicast group and echoes all data it receives from
  *the group to its stdout...
  *
- * Antony Courtney,25/11/94
- * Modified by: Frdric Bastien (25/03/04)
- * to compile without warning and work correctly
  */
 
 #include <sys/types.h>
@@ -16,17 +13,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+
 /****** Adjustable variables **************/
-#define AVGOVER 3
-#define SHUTDOWNCOUNT 10
+#define OWLTIMEOUT 300  // 5 min for OWL multicast timeout 
+#define AVGOVER 2
+#define SHUTDOWNCOUNT 6
 #define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
 #define POWERFACTOR  1.00
-#define VOLTAGE      230
-#define PLUG1ON_C    0.21 
-#define PLUG2ON_C    2.70
-#define PLUGSON_C    2.80
-#define PCLOAD_C     0.80 
+#define VOLTAGE      235
+#define PLUG1ON_C    0.20 
+#define PLUG2ON_C    2.20
+#define PLUGSON_C    2.25
+#define PCLOAD_C     0.60 
 /*******************************************/
 
 
@@ -40,6 +39,8 @@
 #define HELLO_PORT 22600
 #define HELLO_GROUP "224.192.32.19"
 #define MSGBUFSIZE 2000
+
+int RecFlag;  // Flag will change on receiving a new multicast package 
 
 // vvvvvv -- Pimote control code -- vvvvvv 
 //    Insert at the top of the code 
@@ -111,6 +112,37 @@ int pimote_onoff (int socket, int on1off) {
 // ^^^^^^ -- Pimote control code -- ^^^^^^  
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 int main(int argc, char *argv[])
 {
   struct sockaddr_in addr;
@@ -118,6 +150,8 @@ int main(int argc, char *argv[])
   struct ip_mreq mreq;
   char msgbuf[MSGBUFSIZE];
   
+    
+    
     int i;
     char *msg1, *msg2;
     char msg3[9];
@@ -182,7 +216,12 @@ int main(int argc, char *argv[])
     perror("setsockopt");
     exit(1);
   } /* now just enter a read-print loop */
+  
+  
+  
   while (1) {
+    usleep(1);
+    
     addrlen=sizeof(addr);
     if ((nbytes=recvfrom(fd,msgbuf,MSGBUFSIZE,0,
              (struct sockaddr *) &addr,&addrlen)) < 0) {
@@ -191,6 +230,7 @@ int main(int argc, char *argv[])
     }
     msgbuf[nbytes] = 0x00; // null terminate before printing
     // puts(msgbuf);
+    
     
     
     // MY own addition: 
@@ -234,57 +274,67 @@ int main(int argc, char *argv[])
         switch(statusSocket) {
         case 9 :
             if (valExporting >= PLUGSON) { // Turn everything on! 
-                pimote_onoff (0,1);     statusSocket = 9;
+                pimote_onoff (1,1);     statusSocket = 9;
+                pimote_onoff (2,1);
             } else if (valExporting <= 5) { // Everything off! 
-                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+                pimote_onoff (1,0);     statusSocket = 0;   countON = 0;
+                pimote_onoff (2,0);
             }
             break;
         case 2 :
             if (valExporting >= (PLUGSON - PLUG2ON + 20)) { // Turn everything on! 
-                pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
+                pimote_onoff (1,1);     statusSocket = 9;   countON = 0;
+                pimote_onoff (2,1);
             } else if (valExporting >= PLUG2ON) {
-                pimote_onoff (2,1);     statusSocket = 2; 
                 pimote_onoff (1,0);
+                pimote_onoff (2,1);     statusSocket = 2; 
             } else if (valExporting <= 5) { // Everything off! 
-                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+                pimote_onoff (1,0);     statusSocket = 0;   countON = 0;
+                pimote_onoff (2,0);
             } else {
-                pimote_onoff (2,1);     statusSocket = 2; 
                 pimote_onoff (1,0);
+                pimote_onoff (2,1);     statusSocket = 2; 
             }
             break;
         case 1 :
             if (valExporting >= (PLUGSON - PLUG1ON + 50)) { // Turn everything on! 
-                pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
+                pimote_onoff (1,1);     statusSocket = 9;   countON = 0;
+                pimote_onoff (2,1);
             } else if (valExporting >= PLUG2ON) {
-                pimote_onoff (2,1);     statusSocket = 2;   countON = 0; 
                 pimote_onoff (1,0);
+                pimote_onoff (2,1);     statusSocket = 2;   countON = 0; 
             } else if (valExporting >= PLUG1ON) {
-                pimote_onoff (2,0);
                 pimote_onoff (1,1);     statusSocket = 1;
+                pimote_onoff (2,0);
             } else if (valExporting <= 5) { // Everything off! 
-                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
-            } else {
+                pimote_onoff (1,0);     statusSocket = 0;   countON = 0;
                 pimote_onoff (2,0);
+            } else {
                 pimote_onoff (1,1);     statusSocket = 1;
+                pimote_onoff (2,0);
             }
             break;
         default : 
             if (valExporting >= PLUGSON) { // Turn everything on! 
-                pimote_onoff (0,1);     statusSocket = 9;   countON = 0;
+                pimote_onoff (1,1);     statusSocket = 9;   countON = 0;
+                pimote_onoff (2,1);
             } else if (valExporting >= PLUG2ON) {
-                pimote_onoff (2,1);     statusSocket = 2;   countON = 0;
                 pimote_onoff (1,0);
+                pimote_onoff (2,1);     statusSocket = 2;   countON = 0;
             } else if (valExporting >= PLUG1ON) {
-                pimote_onoff (2,0);
                 pimote_onoff (1,1);     statusSocket = 1;   countON = 0;
+                pimote_onoff (2,0);
             } else {
-                pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+                pimote_onoff (1,0);     statusSocket = 0;   countON = 0;
+                pimote_onoff (2,0);
             }
         }
         if (countON == ONTIMEOUT) {// Everything off for 2 cycles to reassess power usage 
-            pimote_onoff (0,0);
+            pimote_onoff (1,0);
+            pimote_onoff (2,0);
         } else if (countON > ONTIMEOUT) {
-            pimote_onoff (0,0);     statusSocket = 0;   countON = 0;
+            pimote_onoff (1,0);
+            pimote_onoff (2,0);   statusSocket = 0;   countON = 0;
         }
         
         
@@ -319,7 +369,7 @@ int main(int argc, char *argv[])
                 system("cmd /C shutdown -s -t 300");
             }
         }
-        if (valExporting <= 1 && ((valUsage - valGenerating) >= 200)) { // Big appliance using elec
+        if (valExporting <= 1 && ((valUsage - valGenerating) >= 400)) { // Big appliance using elec
             printf("Big appliance detected, turning off BOINC. \n");
             if (countShutdown > 1) countShutdown = 1;
             system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode never");

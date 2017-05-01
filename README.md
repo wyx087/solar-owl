@@ -3,6 +3,7 @@
 This is what's contained in this repository, there are 3 parts: 
 
 - il.c : Data logging and electricity usage automation on Raspberry Pi 
+- ilm.c : Everything il.c does + monitoring thread to power cycle OWL if timed out 
 - www : Website files for viewing the data logs with graphical representation 
 - pc.c : Runs on PC to automatically control BOINC according to electricity usage 
 
@@ -10,9 +11,9 @@ This is what's contained in this repository, there are 3 parts:
 Requirements for il.c: 
 
 - OWL Intuition Solar PV monitor 
-- Raspberry Pi 1 (should work with newer) 
+- Raspberry Pi (I used version 1B, should work with newer) 
 - Setup a RAMdisk at /var/tmp (https://www.domoticz.com/wiki/Setting_up_a_RAM_drive_on_Raspberry_Pi) 
-- Pimote and 2 sockets from Energenie (see pc.c on how to comment out this part if you only want data logging) 
+- Pimote and plugs from Energenie (see pc.c on how to comment out this part if you only want data logging) 
 - wiringPi library for RaspberryPi GPIO interactions (not needed for data logging) 
 
 Requirements for www: 
@@ -37,10 +38,11 @@ A few things to note:
 - The current log file will disappear if RPi power gets turned off because it is stored in RAMdisk. Archived files will not disappear.
 - On RPi, there should be 2 background scheduled tasks: compiled il.c program on boot and logtrim.sh at 23:59. 
 - To build il.c, use the following command: gcc -lwiringPi -o il il.c 
+- To build ilm.c, use the following command: gcc -pthread -lwiringPi -o ilm ilm.c 
 - To build pc.c, no special command is needed, Linux or Cygwin envirounment recommended. 
 - Inside www/LINKS.TXT details the links required for the graph webpage 
 - The definition for log file columns are found near the end of C files 
-- Attempt has been made to keep similarity between il.c and pc.c so that the updates and bug fixes can be applied to both easily. 
+- Attempt has been made to keep similarity between il.c, ilm.c and pc.c so that the updates and bug fixes can be applied to both easily. 
 
 
 To do:

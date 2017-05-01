@@ -12,7 +12,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <pthread.h>
 
 /****** Adjustable variables **************/
 #define OWLTIMEOUT 300  // 5 min for OWL multicast timeout 
@@ -112,35 +112,35 @@ int pimote_onoff (int socket, int on1off) {
 // ^^^^^^ -- Pimote control code -- ^^^^^^  
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+void *threadFunc(void *arg)
+{
+    time_t start, end;
+    double dif;
+    int RecFlagDelayed = 0; // record previous Received flag status. 
+                        // Only read RecFlag, so no need for mutex 
+    
+    time (&start);
+    
+    while(1)
+    {
+        if (RecFlag != RecFlagDelayed) {  // RecFlag has changed 
+            time (&start);
+        }
+        RecFlagDelayed = RecFlag;
+        
+        usleep(1000);
+        
+        time (&end);
+        dif = difftime (end,start);
+        if (dif >= OWLTIMEOUT) {  // After so long still no change of RecFlag 
+            pimote_onoff (3,0);
+            usleep(1000);
+            pimote_onoff (3,1);
+            time (&start);
+        }
+    }
+    return NULL;
+}
 
 
 int main(int argc, char *argv[])
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
   struct ip_mreq mreq;
   char msgbuf[MSGBUFSIZE];
   
-    
+    pthread_t pth;	// this is our thread identifier
     
     int i;
     char *msg1, *msg2;
@@ -217,10 +217,10 @@ int main(int argc, char *argv[])
     exit(1);
   } /* now just enter a read-print loop */
   
-  
+  pthread_create(&pth,NULL,threadFunc,"foo");
   
   while (1) {
-    
+    usleep(1);
     
     addrlen=sizeof(addr);
     if ((nbytes=recvfrom(fd,msgbuf,MSGBUFSIZE,0,
@@ -231,7 +231,7 @@ int main(int argc, char *argv[])
     msgbuf[nbytes] = 0x00; // null terminate before printing
     // puts(msgbuf);
     
-    
+    RecFlag = !RecFlag;
     
     // MY own addition: 
     if (msgbuf[1] == 'e'){  // Electricity usage only 
