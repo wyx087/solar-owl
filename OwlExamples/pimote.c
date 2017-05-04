@@ -78,6 +78,20 @@ int pimote_onoff (int socket, int on1off) {
       digitalWrite (D0, LOW);
       r = 2;
       break;
+    case 3:
+      printf ("socket 3.\n");
+      digitalWrite (D2, HIGH);
+      digitalWrite (D1, LOW);
+      digitalWrite (D0, HIGH);
+      r = 3;
+      break;
+    case 4:
+      printf ("socket 4.\n");
+      digitalWrite (D2, HIGH);
+      digitalWrite (D1, LOW);
+      digitalWrite (D0, LOW);
+      r = 4;
+      break;
     default:
       printf ("ALL sockets.\n");
       digitalWrite (D2, LOW);
@@ -90,7 +104,7 @@ int pimote_onoff (int socket, int on1off) {
   digitalWrite (CE, HIGH);
   delay (250) ; 
   digitalWrite (CE, LOW);
-  delay (150) ;  
+  delay (650) ;  
   return r;
 }
 // ^^^^^^ -- Pimote control code -- ^^^^^^  

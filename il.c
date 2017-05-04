@@ -15,17 +15,17 @@
 
 
 /****** Adjustable variables **************/
-#define OWLTIMEOUT 300  // 5 min for OWL multicast timeout 
+#define OWLTIMEOUT 600  // 10 min for OWL multicast timeout 
 #define AVGOVER 10 
 #define SHUTDOWNCOUNT 6
 #define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
 #define POWERFACTOR  1.00
-#define VOLTAGE      235
+#define VOLTAGE      240
 #define PLUG1ON_C    0.20 
-#define PLUG2ON_C    2.20
-#define PLUGSON_C    2.25
-#define PCLOAD_C     0.60 
+#define PLUG2ON_C    2.25
+#define PLUGSON_C    2.35
+#define PCLOAD_C     0.65 
 /*******************************************/
 
 
@@ -93,6 +93,20 @@ int pimote_onoff (int socket, int on1off) {
       digitalWrite (D1, HIGH);
       digitalWrite (D0, LOW);
       r = 2;
+      break;
+    case 3:
+      printf ("socket 3.\n");
+      digitalWrite (D2, HIGH);
+      digitalWrite (D1, LOW);
+      digitalWrite (D0, HIGH);
+      r = 3;
+      break;
+    case 4:
+      printf ("socket 4.\n");
+      digitalWrite (D2, HIGH);
+      digitalWrite (D1, LOW);
+      digitalWrite (D0, LOW);
+      r = 4;
       break;
     default:
       printf ("ALL sockets.\n");
