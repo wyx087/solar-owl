@@ -16,8 +16,8 @@
 
 /****** Adjustable variables **************/
 #define OWLTIMEOUT 600  // 10 min for OWL multicast timeout 
-#define AVGOVER 10 
-#define SHUTDOWNCOUNT 6
+#define AVGOVER 2 
+#define SHUTDOWNCOUNT 66
 #define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
 #define POWERFACTOR  1.00
@@ -197,7 +197,7 @@ int main(int argc, char *argv[])
       strncpy(logfilename, defaultlogfilename, sizeof(defaultlogfilename));
     }
     printf("Writing to log file:- %s\n\n", logfilename);
-    
+    printf(">>> Close this program if you don't want auto shutdown! <<< \n\n");  // shutdown -
     
 
   u_int yes=1;            /*** MODIFICATION TO ORIGINAL */

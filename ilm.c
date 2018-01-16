@@ -288,67 +288,67 @@ int main(int argc, char *argv[])
         switch(statusSocket) {
         case 9 :
             if (valExporting >= PLUGSON) { // Turn everything on! 
-                pimote_onoff (1,1);     statusSocket = 9;
-                pimote_onoff (2,1);
+                pimote_onoff  (2,1);     statusSocket = 9;
+                pimote_onoff  (1,1);
             } else if (valExporting <= 5) { // Everything off! 
-                pimote_onoff (1,0);     statusSocket = 0;   countON = 0;
-                pimote_onoff (2,0);
+                pimote_onoff  (2,0);     statusSocket = 0;   countON = 0;
+                pimote_onoff  (1,0);
             }
             break;
         case 2 :
             if (valExporting >= (PLUGSON - PLUG2ON + 20)) { // Turn everything on! 
-                pimote_onoff (1,1);     statusSocket = 9;   countON = 0;
-                pimote_onoff (2,1);
+                pimote_onoff  (2,1);     statusSocket = 9;   countON = 0;
+                pimote_onoff  (1,1);
             } else if (valExporting >= PLUG2ON) {
-                pimote_onoff (1,0);
-                pimote_onoff (2,1);     statusSocket = 2; 
+                pimote_onoff  (2,0);
+                pimote_onoff  (1,1);     statusSocket = 2; 
             } else if (valExporting <= 5) { // Everything off! 
-                pimote_onoff (1,0);     statusSocket = 0;   countON = 0;
-                pimote_onoff (2,0);
+                pimote_onoff  (2,0);     statusSocket = 0;   countON = 0;
+                pimote_onoff  (1,0);
             } else {
-                pimote_onoff (1,0);
-                pimote_onoff (2,1);     statusSocket = 2; 
+                pimote_onoff  (2,0);
+                pimote_onoff  (1,1);     statusSocket = 2; 
             }
             break;
         case 1 :
             if (valExporting >= (PLUGSON - PLUG1ON + 50)) { // Turn everything on! 
-                pimote_onoff (1,1);     statusSocket = 9;   countON = 0;
-                pimote_onoff (2,1);
+                pimote_onoff  (2,1);     statusSocket = 9;   countON = 0;
+                pimote_onoff  (1,1);
             } else if (valExporting >= PLUG2ON) {
-                pimote_onoff (1,0);
-                pimote_onoff (2,1);     statusSocket = 2;   countON = 0; 
+                pimote_onoff  (2,0);
+                pimote_onoff  (1,1);     statusSocket = 2;   countON = 0; 
             } else if (valExporting >= PLUG1ON) {
-                pimote_onoff (1,1);     statusSocket = 1;
-                pimote_onoff (2,0);
+                pimote_onoff  (2,1);     statusSocket = 1;
+                pimote_onoff  (1,0);
             } else if (valExporting <= 5) { // Everything off! 
-                pimote_onoff (1,0);     statusSocket = 0;   countON = 0;
-                pimote_onoff (2,0);
+                pimote_onoff  (2,0);     statusSocket = 0;   countON = 0;
+                pimote_onoff  (1,0);
             } else {
-                pimote_onoff (1,1);     statusSocket = 1;
-                pimote_onoff (2,0);
+                pimote_onoff  (2,1);     statusSocket = 1;
+                pimote_onoff  (1,0);
             }
             break;
         default : 
             if (valExporting >= PLUGSON) { // Turn everything on! 
-                pimote_onoff (1,1);     statusSocket = 9;   countON = 0;
-                pimote_onoff (2,1);
+                pimote_onoff  (2,1);     statusSocket = 9;   countON = 0;
+                pimote_onoff  (1,1);
             } else if (valExporting >= PLUG2ON) {
-                pimote_onoff (1,0);
-                pimote_onoff (2,1);     statusSocket = 2;   countON = 0;
+                pimote_onoff  (2,0);
+                pimote_onoff  (1,1);     statusSocket = 2;   countON = 0;
             } else if (valExporting >= PLUG1ON) {
-                pimote_onoff (1,1);     statusSocket = 1;   countON = 0;
-                pimote_onoff (2,0);
+                pimote_onoff  (2,1);     statusSocket = 1;   countON = 0;
+                pimote_onoff  (1,0);
             } else {
-                pimote_onoff (1,0);     statusSocket = 0;   countON = 0;
-                pimote_onoff (2,0);
+                pimote_onoff  (2,0);     statusSocket = 0;   countON = 0;
+                pimote_onoff  (1,0);
             }
         }
         if (countON == ONTIMEOUT) {// Everything off for 2 cycles to reassess power usage 
-            pimote_onoff (1,0);
-            pimote_onoff (2,0);
+            pimote_onoff  (2,0);
+            pimote_onoff  (1,0);
         } else if (countON > ONTIMEOUT) {
-            pimote_onoff (1,0);
-            pimote_onoff (2,0);   statusSocket = 0;   countON = 0;
+            pimote_onoff  (2,0);
+            pimote_onoff  (1,0);   statusSocket = 0;   countON = 0;
         }
         
         
