@@ -134,6 +134,7 @@ void *threadFunc(void *arg)
                         // Only read RecFlag, so no need for mutex 
     
     time (&start);
+    pimote_onoff (3,1);
     
     while(1)
     {
