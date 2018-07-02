@@ -197,9 +197,9 @@ int main(int argc, char *argv[])
     } else {
       strncpy(logfilename, defaultlogfilename, sizeof(defaultlogfilename));
     }
+    
     printf("Writing to log file:- %s\n\n", logfilename);
-    
-    
+        
 
   u_int yes=1;            /*** MODIFICATION TO ORIGINAL */
   /* create what looks like an ordinary UDP socket */
@@ -368,13 +368,34 @@ int main(int argc, char *argv[])
         avgGenerating = sumGenerating / AVGOVER;
         // printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
         // vvvvv  Additional logic here for WOL  vvvvvvvvvvvv
-        statusBoinc = 0;
+        if ((valUsage - valGenerating) >= 500) {  // added to ensure PC won't wake up due to spike usage 
+            statusBoinc = 1;
+        }
+        
         if (countExporting == 0) {
             if (avgExporting > PCLOAD && valExporting > PCLOAD) {
-                statusBoinc = 88;
-                system(". /home/pi/wol/wol_main.sh");
-            } 
+                if (statusBoinc != 1) {
+                    statusBoinc = 8;
+                    system(". /home/pi/wol/wol_main.sh");
+                }
+            } else {
+                statusBoinc = 0;
+            }
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         // ^^^^^  Additional logic here for WOL  vvvvvvvvvvvv
         
         // Log file for graph 

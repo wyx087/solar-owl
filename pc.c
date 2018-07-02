@@ -126,7 +126,7 @@ int pimote_onoff (int socket, int on1off) {
 // ^^^^^^ -- Pimote control code -- ^^^^^^  
 
 
-
+// Space for multithreaded OWL monitor 
 
 
 
@@ -166,6 +166,7 @@ int main(int argc, char *argv[])
   
     
     
+    
     int i;
     char *msg1, *msg2;
     char msg3[9];
@@ -196,8 +197,8 @@ int main(int argc, char *argv[])
     } else {
       strncpy(logfilename, defaultlogfilename, sizeof(defaultlogfilename));
     }
+    printf("\n\n>>> Close this program if you don't want auto shutdown! <<< \n\n\n\n");  // shutdown -
     printf("Writing to log file:- %s\n\n", logfilename);
-    printf(">>> Close this program if you don't want auto shutdown! <<< \n\n");  // shutdown -
     
 
   u_int yes=1;            /*** MODIFICATION TO ORIGINAL */
@@ -367,26 +368,33 @@ int main(int argc, char *argv[])
         avgGenerating = sumGenerating / AVGOVER;
         // printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
         // vvvvv  Additional logic here for BIONIC  vvvvvvvvvvvv
-        statusBoinc = 0;
+        if (valExporting <= 10) {  // added to ensure PC won't wake up due to spike usage 
+            statusBoinc = 1;
+        }
         if (countExporting == 0) {
-            if (avgExporting < 30 && statusSocket == 0) {   // Turn BOINC off 
-                countShutdown = countShutdown - 1;
+            if (avgExporting < 10 && statusSocket == 0) {   // Turn BOINC off 
+                countShutdown = countShutdown- 1;
                 statusBoinc = 11;
                 system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode never");
             } else if (avgExporting > PCLOAD && valExporting > PCLOAD) {    // Turn BOINC on 
-                countShutdown = SHUTDOWNCOUNT;
-                statusBoinc = 99;
-                system("cmd /C shutdown -a");
-                system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode auto");
+                if (statusBoinc != 1) {
+                    countShutdown = SHUTDOWNCOUNT;
+                    statusBoinc = 88;
+                                    system("cmd /C shutdown -a 2> null");
+                    system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode auto");
+                }
+            } else {
+                statusBoinc = 0;
             }
             if (countShutdown <= 0) {   // Too many instances low power, turn off computer 
-                system("cmd /C shutdown -s -t 300");
+                printf ("shutdown here\n");    system("cmd /C shutdown -s -t 300");
             }
         }
-        if (valExporting <= 1 && ((valUsage - valGenerating) >= 400)) { // Big appliance using elec
-            printf("Big appliance detected, turning off BOINC. \n");
-            if (countShutdown > 1) countShutdown = 1;
+        if ((valExporting <= 1) && ((valUsage - valGenerating) >= 500) && (countShutdown > 2)) { // Big appliance using elec
+            printf("Big appliance detected, going to hibernate. \n");
+            if (countShutdown > 2) countShutdown = 2;
             system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode never");
+            printf ("hibernate here\n");    system("cmd /C shutdown -h");
         }
         // ^^^^^  Additional logic here for BIONIC  vvvvvvvvvvvv
         
