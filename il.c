@@ -15,6 +15,7 @@
 
 
 /****** Adjustable variables **************/
+#define EN_SHUTDOWN 1 // set to 0 to disable shutdown, for generating noshutdown EXE on PC
 #define OWLTIMEOUT 600  // 10 min for OWL multicast timeout 
 #define AVGOVER 10 
 #define SHUTDOWNCOUNT 6
@@ -126,6 +127,7 @@ int pimote_onoff (int socket, int on1off) {
 // ^^^^^^ -- Pimote control code -- ^^^^^^  
 
 
+// Space for multithreaded OWL monitor 
 
 
 
@@ -175,7 +177,7 @@ int main(int argc, char *argv[])
     signed long aryUsage[AVGOVER] ={0}, aryGenerating[AVGOVER] ={0}, aryExporting[AVGOVER] ={0};
     int countUsage =0, countGenerating =0, countExporting =0;
     int statusSocket, countON;
-    int statusBoinc = 0, countShutdown = SHUTDOWNCOUNT;
+    int statusBoinc = 0, countShutdown = SHUTDOWNCOUNT, power_on_buf = 10;
     
     FILE * pLogFile = NULL;
     FILE * pGraphFile = NULL;
@@ -367,13 +369,36 @@ int main(int argc, char *argv[])
         avgGenerating = sumGenerating / AVGOVER;
         // printf("--- avg counters:  %d | %d | %d ---\n", countUsage, countExporting, countGenerating);
         // vvvvv  Additional logic here for WOL  vvvvvvvvvvvv
-        statusBoinc = 0;
+        if ((valUsage - valGenerating) >= 500) {  // added to ensure PC won't wake up due to spike usage 
+            statusBoinc = 1;
+        }
+        
         if (countExporting == 0) {
             if (avgExporting > PCLOAD && valExporting > PCLOAD) {
-                statusBoinc = 88;
-                system(". /home/pi/wol/wol_main.sh");
-            } 
+                if (statusBoinc != 1) {
+                    statusBoinc = 8;
+                    system(". /home/pi/wol/wol_main.sh");
+                } else statusBoinc = 0;
+            } else statusBoinc = 0;
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         // ^^^^^  Additional logic here for WOL  vvvvvvvvvvvv
         
         // Log file for graph 
@@ -403,6 +428,7 @@ int main(int argc, char *argv[])
         
         printf ("\n");
         fflush(stdout); // print everything in the stdout buffer
+        
     }
 
   }

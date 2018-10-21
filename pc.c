@@ -15,9 +15,10 @@
 
 
 /****** Adjustable variables **************/
+#define EN_SHUTDOWN 1 // set to 0 to disable shutdown, for generating noshutdown EXE on PC
 #define OWLTIMEOUT 600  // 10 min for OWL multicast timeout 
 #define AVGOVER 2 
-#define SHUTDOWNCOUNT 66
+#define SHUTDOWNCOUNT 20
 #define ONTIMEOUT 999 // After how long turn off everything to redetermine state 
 
 #define POWERFACTOR  1.00
@@ -176,7 +177,7 @@ int main(int argc, char *argv[])
     signed long aryUsage[AVGOVER] ={0}, aryGenerating[AVGOVER] ={0}, aryExporting[AVGOVER] ={0};
     int countUsage =0, countGenerating =0, countExporting =0;
     int statusSocket, countON;
-    int statusBoinc = 0, countShutdown = SHUTDOWNCOUNT;
+    int statusBoinc = 0, countShutdown = SHUTDOWNCOUNT, power_on_buf = 10;
     
     FILE * pLogFile = NULL;
     FILE * pGraphFile = NULL;
@@ -197,7 +198,7 @@ int main(int argc, char *argv[])
     } else {
       strncpy(logfilename, defaultlogfilename, sizeof(defaultlogfilename));
     }
-    printf("\n\n>>> Close this program if you don't want auto shutdown! <<< \n\n\n\n");  // shutdown -
+    if (EN_SHUTDOWN == 1)  printf("\n\n>>> Close this program if you don't want auto shutdown! <<< \n\n\n\n"); 
     printf("Writing to log file:- %s\n\n", logfilename);
     
 
@@ -380,21 +381,23 @@ int main(int argc, char *argv[])
                 if (statusBoinc != 1) {
                     countShutdown = SHUTDOWNCOUNT;
                     statusBoinc = 88;
-                                    system("cmd /C shutdown -a 2> null");
+                    if (EN_SHUTDOWN == 1)  system("cmd /C shutdown -a 2> null"); 
                     system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode auto");
-                }
-            } else {
-                statusBoinc = 0;
-            }
+                } else statusBoinc = 0;
+            } else statusBoinc = 0;
             if (countShutdown <= 0) {   // Too many instances low power, turn off computer 
-                printf ("shutdown here\n");    system("cmd /C shutdown -s -t 300");
+                printf ("shutdown here\n");
+                if (EN_SHUTDOWN == 1)  system("cmd /C shutdown -s -t 300"); 
             }
         }
         if ((valExporting <= 1) && ((valUsage - valGenerating) >= 500) && (countShutdown > 2)) { // Big appliance using elec
-            printf("Big appliance detected, going to hibernate. \n");
-            if (countShutdown > 2) countShutdown = 2;
-            system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode never");
-            printf ("hibernate here\n");    system("cmd /C shutdown -h");
+            if (power_on_buf = 0) {  // Prevent on turning on computer. 
+                printf("Big appliance detected, going to hibernate. \n");
+                if (countShutdown > 2) countShutdown = 2;
+                system("cmd /C \"c:\\Program Files\\BOINC\\boinccmd.exe\" --set_run_mode never");
+                printf ("hibernate here\n");
+                if (EN_SHUTDOWN == 1)  system("cmd /C shutdown -h"); 
+            }
         }
         // ^^^^^  Additional logic here for BIONIC  vvvvvvvvvvvv
         
@@ -425,6 +428,7 @@ int main(int argc, char *argv[])
         
         printf ("\n");
         fflush(stdout); // print everything in the stdout buffer
+        if (power_on_buf > 0)  power_on_buf--; 
     }
 
   }

@@ -15,6 +15,7 @@
 #include <pthread.h>
 
 /****** Adjustable variables **************/
+#define EN_SHUTDOWN 1 // set to 0 to disable shutdown, for generating noshutdown EXE on PC
 #define OWLTIMEOUT 600  // 10 min for OWL multicast timeout 
 #define AVGOVER 10 
 #define SHUTDOWNCOUNT 6
@@ -176,7 +177,7 @@ int main(int argc, char *argv[])
     signed long aryUsage[AVGOVER] ={0}, aryGenerating[AVGOVER] ={0}, aryExporting[AVGOVER] ={0};
     int countUsage =0, countGenerating =0, countExporting =0;
     int statusSocket, countON;
-    int statusBoinc = 0, countShutdown = SHUTDOWNCOUNT;
+    int statusBoinc = 0, countShutdown = SHUTDOWNCOUNT, power_on_buf = 10;
     
     FILE * pLogFile = NULL;
     FILE * pGraphFile = NULL;
@@ -377,11 +378,13 @@ int main(int argc, char *argv[])
                 if (statusBoinc != 1) {
                     statusBoinc = 8;
                     system(". /home/pi/wol/wol_main.sh");
-                }
-            } else {
-                statusBoinc = 0;
-            }
+                } else statusBoinc = 0;
+            } else statusBoinc = 0;
         }
+        
+        
+        
+        
         
         
         
@@ -425,6 +428,7 @@ int main(int argc, char *argv[])
         
         printf ("\n");
         fflush(stdout); // print everything in the stdout buffer
+        
     }
 
   }
