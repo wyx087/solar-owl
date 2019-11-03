@@ -23,7 +23,7 @@
     
     g = new Dygraph(
     document.getElementById("mygraph"),
-    "log/solarshort.csv", 
+    "log/solar_short.csv", 
         {
             labels: [ "Time", "Usage", "Generating", "Exporting" ],
             colors: ['#000000', '#00E000', '#FF0000'],
@@ -50,7 +50,7 @@ function read_last_lines($fp, $num){
     return $ordered_lines;
 }
 
-$file = "/var/tmp/solar.log";
+$file = "/var/ramdisk/solar.log";
 $f = fopen($file, "r");
 $lines = read_last_lines($f, 300);
 fclose($f);

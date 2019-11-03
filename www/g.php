@@ -19,7 +19,7 @@
     <select id='dropdownfiles' onchange="drawgraph()">
     <option selected="selected" value="solar.csv">solar.csv</option>
     <?php
-    $files = array_map("htmlspecialchars", scandir("/var/www/html/solar/log"));
+    $files = array_map("htmlspecialchars", scandir("log"));
     $last_files = array_reverse($files);
     foreach ($last_files as $file) {
         if ($i > 31) {                // Set a limit of how far back to go 
@@ -28,7 +28,7 @@
             null;
         } elseif ($file == "solar.csv"){ // Already adding this entry manually  
             null;
-        } elseif ($file == "solarshort.csv"){ // Solarshort is for index page and pi page only 
+        } elseif ($file == "solar_short.csv"){ // Solarshort is for index page and pi page only 
             null;
         }else {
             echo "<option value='$file'>$file</option>";
@@ -64,7 +64,7 @@
         // On page load, run: 
         window.onload = function(){
             setTimeout(function() { drawgraph(); }, 10);
-            setTimeout(function() { selectLasthours(8); }, 500);
+            setTimeout(function() { unzoomGraph(); }, 500);
         };
         
         // Drawing the graph 
@@ -100,7 +100,7 @@
         g.updateOptions({
           dateWindow: null,
           valueRange: null,
-          rollPeriod: 20
+          rollPeriod: 1
         });
         }
         function selectLasthours(hours) {

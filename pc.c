@@ -182,8 +182,8 @@ int main(int argc, char *argv[])
     FILE * pLogFile = NULL;
     FILE * pGraphFile = NULL;
     const char defaultlogfilename[] = "/cygdrive/h/__Logs__/solar.log";
-    // const char defaultlogfilename[] = "/var/tmp/solar.log";
-    // const char defaultgraphname[] = "/var/tmp/solar_graph.log";
+    // const char defaultlogfilename[] = "/var/ramdisk/solar.log";
+    // const char defaultgraphname[] = "/var/ramdisk/solar_graph.log";
     char logfilename[100];
     time_t rawtime;
     char timestr[30];

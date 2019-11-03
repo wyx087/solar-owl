@@ -33,7 +33,7 @@
         function drawgraph() {
             g = new Dygraph(
             document.getElementById("mygraph"),
-            "log/solarshort.csv", 
+            "log/solar_short.csv", 
                 {
                     labels: [ "Time", "Usage", "Generating", "Exporting" ],
                     colors: ['#FFFFFF', '#00E000', '#FF0000'],

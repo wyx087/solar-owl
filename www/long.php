@@ -36,7 +36,7 @@ function read_last_lines($fp, $num){
     return $ordered_lines;
 }
 
-$file = "/var/tmp/solar.log";
+$file = "/var/ramdisk/solar.log";
 $f = fopen($file, "r");
 $lines = read_last_lines($f, 20000);
 fclose($f);
@@ -48,7 +48,7 @@ foreach($lines as $child) {
     echo("</pregt;");
 }
 
-$file = "/var/tmp/solar-1.log";
+$file = "/var/ramdisk/solar-1.log";
 $f = fopen($file, "r");
 $lines = read_last_lines($f, 20000);
 fclose($f);

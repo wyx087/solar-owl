@@ -12,7 +12,7 @@ Requirements for il.c:
 
 - OWL Intuition Solar PV monitor 
 - Raspberry Pi (I used version 1B, should work with newer) 
-- Setup a RAMdisk at /var/tmp (https://www.domoticz.com/wiki/Setting_up_a_RAM_drive_on_Raspberry_Pi) 
+- Setup a RAMdisk at /var/ramdisk (https://www.domoticz.com/wiki/Setting_up_a_RAM_drive_on_Raspberry_Pi) 
 - Pimote and plugs from Energenie (see pc.c on how to comment out this part if you only want data logging) 
 - wiringPi library for RaspberryPi GPIO interactions (not needed for data logging) 
 

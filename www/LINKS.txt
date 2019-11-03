@@ -7,4 +7,5 @@ ln -s /home/pi/solar/log log
 
     In /home/pi/solar/log directory:  
     (create log directory if not already there) 
-ln -s /var/tmp/solar_graph.log solar.csv
+ln -s /var/ramdisk/solar_graph.log solar.csv
+ln -s /var/ramdisk/solar_graphshort.log solar_short.csv
