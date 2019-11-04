@@ -13,6 +13,6 @@
 
 #   Smooth log file archive to disk  
 
-file=/var/tmp/solar_graph.log
+file=/var/ramdisk/solar_graph.log
 DATE=$(date +%Y-%m-%d)
-mv $file /home/pi/solar/log/solar_$DATE.csv
+cp $file /home/pi/solar/log/solar_$DATE.csv
