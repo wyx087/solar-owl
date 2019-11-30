@@ -4,7 +4,9 @@
 
 file=/var/ramdisk/solar_graph.log
 DATE=$(date +%Y-%m-%d)
-cat $file >> /home/pi/solar/log/solar_$DATE.csv
+
+# cat $file >> /home/pi/solar/log/solar_$DATE.csv
+/bin/su -c "cat $file >> /home/pi/solar/log/solar_$DATE.csv" - pi
 
 
 while true; do
