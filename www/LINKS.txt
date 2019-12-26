@@ -1,11 +1,8 @@
 
 This file describes the symbolic links used throughout www directory: 
 
-    In /var/www/html directory:  
-    (location where g.php is located, can be in a subdirectory) 
-ln -s /home/pi/solar/log log
+(location where g.php is located, can be in a subdirectory) 
+ln -s /home/pi/solar/log /var/www/html/log
 
-    In /home/pi/solar/log directory:  
-    (create log directory if not already there) 
-ln -s /var/ramdisk/solar_graph.log solar.csv
-ln -s /var/ramdisk/solar_graphshort.log solar_short.csv
+ln -s /var/ramdisk/solar_graph.log /home/pi/solar/log/solar.csv
+ln -s /var/ramdisk/solar_graphshort.log /home/pi/solar/log/solar_short.csv

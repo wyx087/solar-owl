@@ -1,0 +1,42 @@
+#! /bin/sh 
+
+case "$1" in
+  start)
+    echo [`date +"%Y-%m-%d %H:%M:%S"`] !! Copying files to ramdisk >> /var/ramdisk/ramdisk_solarsync.log
+    rsync -av /home/pi/solar/ramdisk/ /var/ramdisk/ >> /var/ramdisk/ramdisk_solarsync.log
+    echo [`date +"%Y-%m-%d %H:%M:%S"`] !! Ramdisk Synched from HD >> /var/ramdisk/ramdisk_solarsync.log
+    ;;
+  run)
+    echo [`date +"%Y-%m-%d %H:%M:%S"`] !! Copying files to ramdisk >> /var/ramdisk/ramdisk_solarsync.log
+    rsync -av /home/pi/solar/ramdisk/ /var/ramdisk/ >> /var/ramdisk/ramdisk_solarsync.log
+    echo [`date +"%Y-%m-%d %H:%M:%S"`] !! Ramdisk Synched from HD >> /var/ramdisk/ramdisk_solarsync.log
+    echo [`date +"%Y-%m-%d %H:%M:%S"`] !! Starting Owl log trim script >> /var/ramdisk/ramdisk_solarsync.log
+    filein=/var/ramdisk/solar_graph.log
+    fileout=/var/ramdisk/solar_graphshort.log
+    size=250
+    while [ 1 ]; do
+      if [ -f "$filein" ]
+      then
+        tail -n $size $filein > $fileout
+      fi
+      sleep 8
+    done
+    ;;
+  sync)
+    echo [`date +"%Y-%m-%d %H:%M:%S"`] !! Synching files from ramdisk >> /var/ramdisk/ramdisk_solarsync.log
+    rsync -av --delete --recursive --force /var/ramdisk/solar*.log /home/pi/solar/ramdisk/ >> /var/ramdisk/ramdisk_solarsync.log
+    echo [`date +"%Y-%m-%d %H:%M:%S"`] !! Ramdisk Synched to HD >> /var/ramdisk/ramdisk_solarsync.log
+    ;;
+  stop)
+    echo [`date +"%Y-%m-%d %H:%M:%S"`] !! Synching files from ramdisk >> /var/ramdisk/ramdisk_solarsync.log
+    rsync -av --delete --recursive --force /var/ramdisk/solar*.log /home/pi/solar/ramdisk/ >> /var/ramdisk/ramdisk_solarsync.log
+    echo [`date +"%Y-%m-%d %H:%M:%S"`] !! Ramdisk Synched to HD >> /var/ramdisk/ramdisk_solarsync.log
+    ;;
+  *)
+    echo "Usage: solarlog-persist {start|stop|sync|run}"
+    exit 1
+    ;;
+esac
+
+exit 0
+
