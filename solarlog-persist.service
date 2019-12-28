@@ -4,8 +4,7 @@ Description=Solar Owl multicast data logger
 [Service]
 Type=simple
 ExecStart=/home/pi/auto/solarlog-persist run
-ExecStop=/home/pi/auto/solarlog-persist stop
+ExecStop=/home/pi/auto/solarlog-persist sync
 
 [Install]
 WantedBy=multi-user.target
-

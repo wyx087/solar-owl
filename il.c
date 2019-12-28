@@ -377,7 +377,7 @@ int main(int argc, char *argv[])
             if (avgExporting > PCLOAD && valExporting > PCLOAD) {
                 if (statusBoinc != 1) {
                     statusBoinc = 8;
-                    system(". /home/pi/wol/wol_main.sh");
+                    system(". /home/pi/solar/wol_main.sh");
                 } else statusBoinc = 0;
             } else statusBoinc = 0;
         }
@@ -433,4 +433,3 @@ int main(int argc, char *argv[])
 
   }
 }
-
