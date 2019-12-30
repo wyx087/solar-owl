@@ -16,7 +16,7 @@ Requirements for il.c:
 - Pimote and plugs from Energenie (see pc.c on how to comment out this part if you only want data logging) 
 - wiringPi library for RaspberryPi GPIO interactions (not needed for data logging) 
 
-Requirements for www: 
+Requirements for Raspbian Linux distro: 
 
 - Install lighttpd and php-cgi (sudo apt install)
 - Create symbolic links as detailed in LINKS.txt 
@@ -37,8 +37,8 @@ A few things to note:
 
 - The current log file will disappear if RPi power is interrupted. Use "sudo halt" command to safely shutdown RPi 
 - On RPi, there should be the following:
-  - 1 start up task: compiled ilm (or il)
-  - 2 background scheduled tasks: solarlog-save.sh at 23:59, solarlog-persist sync every hour 
+  - 1 start up task: compiled ilm (or il)  This is also done in solarlog-persist.service. However, the service requires customisation to work out of box on Raspbian
+  - 2 background scheduled tasks: solarlog-save.sh at 23:59, solarlog-persist.service sync every hour 
   - 1 systemd using solarlog-persist.service, which runs solarlog-persist 
 - To build il.c, use the following command: gcc -lwiringPi -o il il.c 
 - To build ilm.c, use the following command: gcc -pthread -lwiringPi -o ilm ilm.c 

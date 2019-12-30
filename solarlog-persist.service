@@ -1,7 +1,7 @@
 [Unit]
 Description=Solar Owl multicast data logger 
-After=network-online.target
-Wants=network-online.target
+After=hassio-supervisor.service
+Requires=hassio-supervisor.service
 
 [Service]
 Type=simple
