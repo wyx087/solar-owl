@@ -23,7 +23,7 @@ case "$1" in
     echo [`date +"%Y-%m-%d %H:%M:%S"`] !! Ramdisk Synched to HD >> /var/ramdisk/ramdisk_solarsync.log
     ;;
   *)
-    echo "Usage: solarlog-persist {start|stop|sync|run}"
+    echo "Usage: solarlog-persist {run|sync}"
     exit 1
     ;;
 esac

@@ -1,5 +1,7 @@
 [Unit]
 Description=Solar Owl multicast data logger 
+After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple

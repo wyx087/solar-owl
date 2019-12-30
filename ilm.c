@@ -418,7 +418,7 @@ int main(int argc, char *argv[])
         if (pLogFile == NULL){
             printf("---ERROR--------file open failed--------ERROR---\n");
             fflush(stdout); // print everything in the stdout buffer
-            exit(1);
+            // exit(1);
         } else {
             sprintf(msgbuf, "%s | %d|%2d | %4lu | %4lu | %4lu \n", timestr, statusSocket, statusBoinc, valUsage, valGenerating, valExporting);
             fprintf(pLogFile, "%s", msgbuf);
