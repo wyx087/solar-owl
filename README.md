@@ -20,6 +20,8 @@ Requirements for Raspbian Linux distro:
 
 - Install lighttpd and php-cgi (sudo apt install)
 - Create symbolic links as detailed in LINKS.txt 
+- For Raspberry Pi 4, install latest wiringPi: sudo dpkg -i wiringpi-252.deb 
+(because at time of writing, repo version is 2.50... http://wiringpi.com/wiringpi-updated-to-2-52-for-the-raspberry-pi-4b/)
 
 The dataflow for il.c and www parts on Raspberry Pi: 
 
