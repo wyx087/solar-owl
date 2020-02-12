@@ -1,7 +1,9 @@
-# Raspberry Pi Solar Monitor and Usage Automation 
+# Raspberry Pi OWL Intuition Data Logger and Usage Automation 
+
+This is adopted from OWL documentation using the multicast listener example here: 
+https://theowl.zendesk.com/hc/en-gb/articles/201284603-Multicast-UDP-API-Information
 
 This is what's contained in this repository, there are 3 parts: 
-
 - il.c : Data logging and electricity usage automation on Raspberry Pi 
 - ilm.c : Everything il.c does + monitoring thread to power cycle OWL if timed out 
 - www : Website files for viewing the data logs with graphical representation 
@@ -11,7 +13,7 @@ This is what's contained in this repository, there are 3 parts:
 Requirements for il.c: 
 
 - OWL Intuition Solar PV monitor 
-- Raspberry Pi (I used version 1B, 3B and 4B, should work with all) 
+- Raspberry Pi (I used on version 1B, 3B and 4B, should work with all) 
 - Setup a RAMdisk at /var/ramdisk (https://www.domoticz.com/wiki/Setting_up_a_RAM_drive_on_Raspberry_Pi) 
 - Pimote and plugs from Energenie (see pc.c on how to comment out this part if you only want data logging) 
 - wiringPi library for RaspberryPi GPIO interactions (not needed for data logging) 
@@ -21,7 +23,7 @@ Requirements for Raspbian Linux distro:
 - Install lighttpd and php-cgi (sudo apt install)
 - Create symbolic links as detailed in LINKS.txt 
 - For Raspberry Pi 4, install latest wiringPi: sudo dpkg -i wiringpi-252.deb 
-(because at time of writing, repo version is 2.50... http://wiringpi.com/wiringpi-updated-to-2-52-for-the-raspberry-pi-4b/)
+(at time of writing, apt repo version is 2.50... http://wiringpi.com/wiringpi-updated-to-2-52-for-the-raspberry-pi-4b/)
 
 The dataflow for il.c and www parts on Raspberry Pi: 
 
